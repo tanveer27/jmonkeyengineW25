@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 public class TestAndroidSensors extends SimpleApplication implements ActionListener, AnalogListener {
 
     private static final Logger logger = Logger.getLogger(TestAndroidSensors.class.getName());
+    private static final String MOUSE_CLICK = "MouseClick";
 
     private Geometry geomZero = null;
     // Map of joysticks saved with the joyId as the key
@@ -134,8 +135,8 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
 
         // Touch (aka MouseInput.BUTTON_LEFT) is used to record the starting
         // orientation when using absolute rotations
-        inputManager.addMapping("MouseClick", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-        inputManager.addListener(this, "MouseClick");
+        inputManager.addMapping(MOUSE_CLICK, new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        inputManager.addListener(this, MOUSE_CLICK);
 
         Joystick[] joysticks = inputManager.getJoysticks();
         if (joysticks == null || joysticks.length < 1) {
@@ -230,7 +231,7 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
 
     @Override
     public void onAction(String string, boolean pressed, float tpf) {
-       if (string.equalsIgnoreCase("MouseClick") && pressed) {
+       if (string.equalsIgnoreCase(MOUSE_CLICK) && pressed) {
             // Calibrate the axis (set new zero position) if the axis
             // is a sensor joystick axis
             for (IntMap.Entry<Joystick> entry : joystickMap) {
