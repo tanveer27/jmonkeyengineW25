@@ -86,7 +86,6 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
     @Override
     public void simpleInitApp() {
 
-
         if (enableFlyByCameraRotation) {
             flyCam.setEnabled(true);
         } else {
