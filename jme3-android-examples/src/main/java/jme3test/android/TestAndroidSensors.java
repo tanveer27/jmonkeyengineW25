@@ -86,8 +86,6 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
     @Override
     public void simpleInitApp() {
 
-        // useAbsolute = true;
-        // enableRumble = true;
 
         if (enableFlyByCameraRotation) {
             flyCam.setEnabled(true);
