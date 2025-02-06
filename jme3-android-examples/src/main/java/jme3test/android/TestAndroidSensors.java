@@ -1,4 +1,4 @@
-package jme3test.android;
+package jme.test.android;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.Joystick;
