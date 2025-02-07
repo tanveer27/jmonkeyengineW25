@@ -131,6 +131,11 @@ public class OGLESContext implements JmeContext, GLSurfaceView.Renderer, SoftTex
                 androidInput = new AndroidInputHandler();
             }
         }
+        // Handle case where androidInput is still null
+        if (androidInput == null) {
+            logger.log(Level.SEVERE, "androidInput is null. Unable to create view.");
+            return null;
+        }
         androidInput.setView(view);
         androidInput.loadSettings(settings);
 
