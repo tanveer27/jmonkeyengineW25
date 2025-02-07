@@ -1,3 +1,4 @@
+B
 package jme3test.android;
 
 import com.jme3.app.SimpleApplication;
@@ -42,12 +43,12 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
     // flag to allow for the joystick axis to be calibrated on startup
     private boolean initialCalibrationComplete = false;
     // mappings used for onAnalog
-    private final String ORIENTATION_X_PLUS = "Orientation_X_Plus";
-    private final String ORIENTATION_X_MINUS = "Orientation_X_Minus";
-    private final String ORIENTATION_Y_PLUS = "Orientation_Y_Plus";
-    private final String ORIENTATION_Y_MINUS = "Orientation_Y_Minus";
-    private final String ORIENTATION_Z_PLUS = "Orientation_Z_Plus";
-    private final String ORIENTATION_Z_MINUS = "Orientation_Z_Minus";
+    private static final String ORIENTATION_X_PLUS = "Orientation_X_Plus";
+    private static final String ORIENTATION_X_MINUS = "Orientation_X_Minus";
+    private static final String ORIENTATION_Y_PLUS = "Orientation_Y_Plus";
+    private static final String ORIENTATION_Y_MINUS = "Orientation_Y_Minus";
+    private static final String ORIENTATION_Z_PLUS = "Orientation_Z_Plus";
+    private static final String ORIENTATION_Z_MINUS = "Orientation_Z_Minus";
 
 
     // variables to save the current rotation
