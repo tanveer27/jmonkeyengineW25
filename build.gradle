@@ -16,20 +16,6 @@ buildscript {
     }
 }
 
-plugins {
-    id "org.sonarqube" version "6.0.1.5171"
-}
-
-sonarqube {
-    properties {
-        property "sonar.projectKey", "Project-Analysis"
-        property "sonar.projectName", "Project-Analysis"
-        property "sonar.host.url", "http://localhost:9000"
-        property "sonar.login", "sqp_54d0731713bb971f0065ad01c89bd3abcc77692a"
-    }
-}
-
-
 allprojects {
     repositories {
         mavenCentral()
