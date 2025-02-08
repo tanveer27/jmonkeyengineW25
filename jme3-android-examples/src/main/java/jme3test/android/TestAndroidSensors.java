@@ -42,12 +42,12 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
     // flag to allow for the joystick axis to be calibrated on startup
     private boolean initialCalibrationComplete = false;
     // mappings used for onAnalog
-    private final static String orientationXPlus = "Orientation_X_Plus";
-    private final static String orientationXMinus = "Orientation_X_Minus";
-    private final static String orientationYPlus = "Orientation_Y_Plus";
-    private final static String orientationYMinus  = "Orientation_Y_Minus";
-    private final static String orientationZPlus = "Orientation_Z_Plus";
-    private final static String orientationZMinus = "Orientation_Z_Minus";
+    private static final  String orientationXPlus = "Orientation_X_Plus";
+    private static final  String orientationXMinus = "Orientation_X_Minus";
+    private static final  String orientationYPlus = "Orientation_Y_Plus";
+    private static final  String orientationYMinus  = "Orientation_Y_Minus";
+    private static final  String orientationZPlus = "Orientation_Z_Plus";
+    private static final  String orientationZMinus = "Orientation_Z_Minus";
 
 
     // variables to save the current rotation
