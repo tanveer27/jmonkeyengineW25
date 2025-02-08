@@ -80,10 +80,6 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
 
     // Make sure to set joystickEventsEnabled = true in MainActivity for Android
 
-    private float toDegrees(float rad) {
-        return rad * FastMath.RAD_TO_DEG;
-    }
-
     @Override
     public void simpleInitApp() {
 
