@@ -124,7 +124,7 @@ public class CustomArrayAdapter extends ArrayAdapter<String> {
             FilterResults results = new FilterResults();
             String prefix = constraint.toString().toLowerCase();
             Log.i(TAG, "performFiltering: entries size: " + entries.size());
-            if (prefix == null || prefix.length() == 0){
+            if (prefix == null || prefix.isEmpty()) {
                 ArrayList<String> list = new ArrayList<>(entries);
                 results.values = list;
                 results.count = list.size();
