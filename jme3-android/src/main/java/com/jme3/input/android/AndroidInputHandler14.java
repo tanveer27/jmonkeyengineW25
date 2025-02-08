@@ -151,7 +151,7 @@ public class AndroidInputHandler14 extends AndroidInputHandler implements View.O
 //                    new Object[]{source, isJoystick});
             // use inclusive OR to make sure the onKey method is called.
             boolean joyConsumed = ((AndroidJoyInput14)joyInput).onKey(event);
-            consumed = consumed | joyConsumed;
+            consumed = consumed || joyConsumed;
         }
 
         return consumed;
