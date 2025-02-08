@@ -440,12 +440,9 @@ public class AndroidHarness extends Activity implements TouchListener, DialogInt
         if (splashPicID != 0) {
             if (frameLayout != null) {
                 if (splashImageView != null) {
-                    this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            splashImageView.setVisibility(View.INVISIBLE);
-                            frameLayout.removeView(splashImageView);
-                        }
+                    this.runOnUiThread(() -> {
+                        splashImageView.setVisibility(View.INVISIBLE);
+                        frameLayout.removeView(splashImageView);
                     });
                 } else {
                     logger.log(Level.FINE, "splashImageView is null");
