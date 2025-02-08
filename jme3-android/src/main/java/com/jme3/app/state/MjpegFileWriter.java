@@ -42,6 +42,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.jme3.app.state.ImageProcessingException;
+
 
 /**
  * Released under BSD License
@@ -94,29 +96,35 @@ public class MjpegFileWriter {
         addImage(writeImageToBytes(image, quality));
     }
 
-    public void addImage(byte[] imagedata) throws Exception {
-        byte[] fcc = new byte[]{'0', '0', 'd', 'b'};
-        int useLength = imagedata.length;
-        long position = aviChannel.position();
-        int extra = (useLength + (int) position) % 4;
-        if (extra > 0) {
-            useLength = useLength + extra;
-        }
+    public void addImage(byte[] imagedata) throws ImageProcessingException {
+        try {
+            byte[] fcc = new byte[]{'0', '0', 'd', 'b'};
+            int useLength = imagedata.length;
+            long position = aviChannel.position();
+            int extra = (useLength + (int) position) % 4;
 
-        indexlist.addAVIIndex((int) position, useLength);
-
-        aviOutput.write(fcc);
-        aviOutput.write(intBytes(swapInt(useLength)));
-        aviOutput.write(imagedata);
-        if (extra > 0) {
-            for (int i = 0; i < extra; i++) {
-                aviOutput.write(0);
+            if (extra > 0) {
+                useLength += extra;
             }
-        }
-        imagedata = null;
 
-        numFrames++; //add a frame
+            indexlist.addAVIIndex((int) position, useLength);
+
+            aviOutput.write(fcc);
+            aviOutput.write(intBytes(swapInt(useLength)));
+            aviOutput.write(imagedata);
+
+            if (extra > 0) {
+                for (int i = 0; i < extra; i++) {
+                    aviOutput.write(0);
+                }
+            }
+
+            numFrames++;
+        } catch (Exception e) {
+            throw new ImageProcessingException("Error processing image data", e);
+        }
     }
+
 
     public void finishAVI() throws Exception {
         logger.log(Level.INFO, "finishAVI");
