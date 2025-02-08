@@ -165,24 +165,24 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
                 // If found, map axis
                 axis = joystick.getAxis(SensorJoystickAxis.ORIENTATION_X);
                 if (axis != null) {
-                    axis.assignAxis(ORIENTATION_X_PLUS, ORIENTATION_X_MINUS);
-                    inputManager.addListener(this, ORIENTATION_X_PLUS, ORIENTATION_X_MINUS);
+                    axis.assignAxis(orientationXPlus, orientationXMinus);
+                    inputManager.addListener(this, orientationXPlus, orientationXMinus);
                     logger.log(Level.INFO, "Found {0} Joystick, assigning mapping for X axis: {1}, with max value: {2}",
                             new Object[]{joystick.toString(), axis.toString(), ((SensorJoystickAxis) axis).getMaxRawValue()});
                 }
 
                 axis = joystick.getAxis(SensorJoystickAxis.ORIENTATION_Y);
                 if (axis != null) {
-                    axis.assignAxis(ORIENTATION_Y_PLUS, ORIENTATION_Y_MINUS);
-                    inputManager.addListener(this, ORIENTATION_Y_PLUS, ORIENTATION_Y_MINUS);
+                    axis.assignAxis(orientationYPlus, orientationYMinus);
+                    inputManager.addListener(this, orientationYPlus, orientationYMinus);
                     logger.log(Level.INFO, "Found {0} Joystick, assigning mapping for Y axis: {1}, with max value: {2}",
                             new Object[]{joystick.toString(), axis.toString(), ((SensorJoystickAxis) axis).getMaxRawValue()});
                 }
 
                 axis = joystick.getAxis(SensorJoystickAxis.ORIENTATION_Z);
                 if (axis != null) {
-                    axis.assignAxis(ORIENTATION_Z_PLUS, ORIENTATION_Z_MINUS);
-                    inputManager.addListener(this, ORIENTATION_Z_PLUS, ORIENTATION_Z_MINUS);
+                    axis.assignAxis(orientationZPlus, orientationZMinus);
+                    inputManager.addListener(this, orientationZPlus, orientationZMinus);
                     logger.log(Level.INFO, "Found {0} Joystick, assigning mapping for Z axis: {1}, with max value: {2}",
                             new Object[]{joystick.toString(), axis.toString(), ((SensorJoystickAxis) axis).getMaxRawValue()});
                 }
@@ -258,7 +258,7 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
                 new Object[]{string, value, tpf});
         float scaledValue = value;
 
-        if (string.equalsIgnoreCase(ORIENTATION_X_PLUS)) {
+        if (string.equalsIgnoreCase(orientationXPlus)) {
             if (useAbsolute) {
                 // set rotation amount
                 // divide by tpf to get back to actual axis value (0 to 1)
@@ -270,7 +270,7 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
             }
         }
 
-        if (string.equalsIgnoreCase(ORIENTATION_X_MINUS)) {
+        if (string.equalsIgnoreCase(orientationXMinus)) {
             if (useAbsolute) {
                 // set rotation amount
                 // divide by tpf to get back to actual axis value (0 to 1)
@@ -282,7 +282,7 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
             }
         }
 
-        if (string.equalsIgnoreCase(ORIENTATION_Y_PLUS)) {
+        if (string.equalsIgnoreCase(orientationYPlus)) {
             if (useAbsolute) {
                 // set rotation amount
                 // divide by tpf to get back to actual axis value (0 to 1)
@@ -294,7 +294,7 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
             }
         }
 
-        if (string.equalsIgnoreCase(ORIENTATION_Y_MINUS)) {
+        if (string.equalsIgnoreCase(orientationYMinus)) {
             if (useAbsolute) {
                 // set rotation amount
                 // divide by tpf to get back to actual axis value (0 to 1)
