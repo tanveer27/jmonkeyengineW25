@@ -85,11 +85,7 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
         // useAbsolute = true;
         // enableRumble = true;
 
-        if (enableFlyByCameraRotation) {
-            flyCam.setEnabled(true);
-        } else {
-            flyCam.setEnabled(false);
-        }
+        iflyCam.setEnabled(enableFlyByCameraRotation);
 
         Mesh lineX = new Line(Vector3f.ZERO, Vector3f.ZERO.add(Vector3f.UNIT_X.mult(3)));
         Mesh lineY = new Line(Vector3f.ZERO, Vector3f.ZERO.add(Vector3f.UNIT_Y.mult(3)));
