@@ -237,7 +237,7 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
             for (IntMap.Entry<Joystick> entry : joystickMap) {
                 for (JoystickAxis axis : entry.getValue().getAxes()) {
                     if (axis instanceof SensorJoystickAxis) {
-                        logger.log(Level.INFO, "Calibrating Axis: {0}", axis.toString());
+                        logger.log(Level.INFO, "Calibrating Axis: {0}", axis);
                         ((SensorJoystickAxis) axis).calibrateCenter();
                     }
                 }
