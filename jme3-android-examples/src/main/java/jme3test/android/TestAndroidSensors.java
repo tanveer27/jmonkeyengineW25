@@ -43,12 +43,12 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
     // flag to allow for the joystick axis to be calibrated on startup
     private boolean initialCalibrationComplete = false;
     // mappings used for onAnalog
-    private final String ORIENTATION_X_PLUS = "Orientation_X_Plus";
-    private final String ORIENTATION_X_MINUS = "Orientation_X_Minus";
-    private final String ORIENTATION_Y_PLUS = "Orientation_Y_Plus";
-    private final String ORIENTATION_Y_MINUS = "Orientation_Y_Minus";
-    private final String ORIENTATION_Z_PLUS = "Orientation_Z_Plus";
-    private final String ORIENTATION_Z_MINUS = "Orientation_Z_Minus";
+    private static final  String orientationXPlus = "Orientation_X_Plus";
+    private static final  String orientationXMinus = "Orientation_X_Minus";
+    private static final  String orientationYPlus = "Orientation_Y_Plus";
+    private static final  String orientationYMinus  = "Orientation_Y_Minus";
+    private static final  String orientationZPlus = "Orientation_Z_Plus";
+    private static final  String orientationZMinus = "Orientation_Z_Minus";
 
     private static final String COLOR_PARAM = "Color";  // Define a constant
 
@@ -82,10 +82,6 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
     boolean enableGeometryRotation = true;
 
     // Make sure to set joystickEventsEnabled = true in MainActivity for Android
-
-    private float toDegrees(float rad) {
-        return rad * FastMath.RAD_TO_DEG;
-    }
 
     @Override
     public void simpleInitApp() {
