@@ -50,6 +50,9 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
     private final String ORIENTATION_Z_PLUS = "Orientation_Z_Plus";
     private final String ORIENTATION_Z_MINUS = "Orientation_Z_Minus";
 
+    private static final String COLOR_PARAM = "Color";  // Define a constant
+
+
 
     // variables to save the current rotation
     // Used when controlling the geometry with device orientation
@@ -99,21 +102,21 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
 
         Geometry geoX = new Geometry("X", lineX);
         Material matX = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        matX.setColor("Color", ColorRGBA.Red);
+        matX.setColor(COLOR_PARAM, ColorRGBA.Red);
         matX.getAdditionalRenderState().setLineWidth(30);
         geoX.setMaterial(matX);
         rootNode.attachChild(geoX);
 
         Geometry geoY = new Geometry("Y", lineY);
         Material matY = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        matY.setColor("Color", ColorRGBA.Green);
+        matY.setColor(COLOR_PARAM, ColorRGBA.Green);
         matY.getAdditionalRenderState().setLineWidth(30);
         geoY.setMaterial(matY);
         rootNode.attachChild(geoY);
 
         Geometry geoZ = new Geometry("Z", lineZ);
         Material matZ = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        matZ.setColor("Color", ColorRGBA.Blue);
+        matZ.setColor(COLOR_PARAM, ColorRGBA.Blue);
         matZ.getAdditionalRenderState().setLineWidth(30);
         geoZ.setMaterial(matZ);
         rootNode.attachChild(geoZ);
@@ -121,7 +124,7 @@ public class TestAndroidSensors extends SimpleApplication implements ActionListe
         Box b = new Box(1, 1, 1);
         geomZero = new Geometry("Box", b);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Yellow);
+        mat.setColor(COLOR_PARAM, ColorRGBA.Yellow);
         Texture tex_ml = assetManager.loadTexture("Interface/Logo/Monkey.jpg");
         mat.setTexture("ColorMap", tex_ml);
         geomZero.setMaterial(mat);
