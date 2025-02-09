@@ -20,6 +20,7 @@ import com.jme3.input.android.AndroidSensorJoyInput;
 import com.jme3.input.controls.TouchListener;
 import com.jme3.input.controls.TouchTrigger;
 import com.jme3.input.event.TouchEvent;
+import com.jme3.input.event.TouchEvent.Type;
 import com.jme3.system.AppSettings;
 import com.jme3.system.SystemListener;
 import com.jme3.system.android.JmeAndroidSystem;
@@ -379,20 +380,19 @@ public class AndroidHarness extends Activity implements TouchListener, DialogInt
     @Override
     public void onTouch(String name, TouchEvent evt, float tpf) {
         if (name.equals(ESCAPE_EVENT)) {
-            switch (evt.getType()) {
-                case KEY_UP:
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            AlertDialog dialog = new AlertDialog.Builder(AndroidHarness.this) // .setIcon(R.drawable.alert_dialog_icon)
-                                    .setTitle(exitDialogTitle).setPositiveButton("Yes", AndroidHarness.this).setNegativeButton("No", AndroidHarness.this).setMessage(exitDialogMessage).create();
-                            dialog.show();
-                        }
-                    });
-                    break;
-                default:
-                    break;
+            if (evt.getType() == Type.KEY_UP) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog dialog = new AlertDialog.Builder(AndroidHarness.this) // .setIcon(R.drawable.alert_dialog_icon)
+                                .setTitle(exitDialogTitle).setPositiveButton("Yes", AndroidHarness.this)
+                                .setNegativeButton("No", AndroidHarness.this).setMessage(exitDialogMessage)
+                                .create();
+                        dialog.show();
+                    }
+                });
             }
+
         }
     }
 
