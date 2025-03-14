@@ -62,7 +62,7 @@ public class OsvrRenderManagerLibrary implements Library {
 	 */
 	public static native byte osvrRenderManagerFinishRegisterRenderBuffers(Pointer renderManager, Pointer registerBufferState, byte appWillNotOverwriteBeforeNewPresent);
 	/** Original signature : <code>OSVR_ReturnCode osvrRenderManagerPresentSolidColorf(OSVR_RenderManager, OSVR_RGB_FLOAT)</code> */
-	public static native byte osvrRenderManagerPresentSolidColorf(Pointer renderManager, com.jme3.system.osvr.osvrrendermanager.OSVR_RGB.ByValue rgb);
+	public static native byte osvrRenderManagerPresentSolidColorf(Pointer renderManager, com.jme3.system.osvr.common.OSVR_RGB.ByValue rgb);
 	/**
 	 * when you're done.<br>
 	 * Original signature : <code>OSVR_ReturnCode osvrRenderManagerGetRenderInfoCollection(OSVR_RenderManager, OSVR_RenderParams, OSVR_RenderInfoCollection*)</code>
