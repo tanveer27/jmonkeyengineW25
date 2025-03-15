@@ -293,22 +293,6 @@ public class LwjglImage extends Image {
     }
 
     @Override
-    public void readImage(CommandQueue queue, ByteBuffer dest, long[] origin, long[] region, long rowPitch, long slicePitch) {
-        if (origin.length!=3 || region.length!=3) {
-            throw new IllegalArgumentException("origin and region must both be arrays of length 3");
-        }
-        Utils.pointerBuffers[1].rewind();
-        Utils.pointerBuffers[2].rewind();
-        Utils.pointerBuffers[1].put(origin).position(0);
-        Utils.pointerBuffers[2].put(region).position(0);
-        long q = ((LwjglCommandQueue) queue).getQueue();
-        int ret = CL10.clEnqueueReadImage(q, image, true, 
-                Utils.pointerBuffers[1], Utils.pointerBuffers[2], 
-                rowPitch, slicePitch, dest, null, null);
-        Utils.checkError(ret, "clEnqueueReadImage");
-    }
-
-    @Override
     public Event readImageAsync(CommandQueue queue, ByteBuffer dest, long[] origin, long[] region, long rowPitch, long slicePitch) {
         if (origin.length!=3 || region.length!=3) {
             throw new IllegalArgumentException("origin and region must both be arrays of length 3");
@@ -328,7 +312,16 @@ public class LwjglImage extends Image {
     }
 
     @Override
+    public void readImage(CommandQueue queue, ByteBuffer dest, long[] origin, long[] region, long rowPitch, long slicePitch) {
+        wImage((LwjglCommandQueue) queue, dest, origin, region, rowPitch, slicePitch);
+    }
+
+    @Override
     public void writeImage(CommandQueue queue, ByteBuffer dest, long[] origin, long[] region, long rowPitch, long slicePitch) {
+        wImage((LwjglCommandQueue) queue, dest, origin, region, rowPitch, slicePitch);
+    }
+
+    private void wImage(LwjglCommandQueue queue, ByteBuffer dest, long[] origin, long[] region, long rowPitch, long slicePitch) {
         if (origin.length!=3 || region.length!=3) {
             throw new IllegalArgumentException("origin and region must both be arrays of length 3");
         }
@@ -336,9 +329,9 @@ public class LwjglImage extends Image {
         Utils.pointerBuffers[2].rewind();
         Utils.pointerBuffers[1].put(origin).position(0);
         Utils.pointerBuffers[2].put(region).position(0);
-        long q = ((LwjglCommandQueue) queue).getQueue();
-        int ret = CL10.clEnqueueWriteImage(q, image, true, 
-                Utils.pointerBuffers[1], Utils.pointerBuffers[2], 
+        long q = queue.getQueue();
+        int ret = CL10.clEnqueueWriteImage(q, image, true,
+                Utils.pointerBuffers[1], Utils.pointerBuffers[2],
                 rowPitch, slicePitch, dest, null, null);
         Utils.checkError(ret, "clEnqueueWriteImage");
     }
