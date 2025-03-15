@@ -64,6 +64,7 @@ public class RawLayout extends BufferLayout {
             public void write(BufferLayout serializer, ByteBuffer bbf, byte[] obj) {
                 bbf.put(obj);
             }
+
         });
 
         registerSerializer(new ObjectSerializer<Integer>(Integer.class) {
@@ -381,6 +382,9 @@ public class RawLayout extends BufferLayout {
             }
         });
 
+
+
+
         registerSerializer(new ObjectSerializer<Matrix3f>(Matrix3f.class) {
             @Override
             public int length(BufferLayout serializer, Matrix3f obj) {
@@ -396,20 +400,7 @@ public class RawLayout extends BufferLayout {
 
             @Override
             public void write(BufferLayout serializer, ByteBuffer bbf, Matrix3f obj) {
-                obj.getColumn(0, tmp);
-                bbf.putFloat(tmp.x);
-                bbf.putFloat(tmp.y);
-                bbf.putFloat(tmp.z);
-
-                obj.getColumn(1, tmp);
-                bbf.putFloat(tmp.x);
-                bbf.putFloat(tmp.y);
-                bbf.putFloat(tmp.z);
-
-                obj.getColumn(2, tmp);
-                bbf.putFloat(tmp.x);
-                bbf.putFloat(tmp.y);
-                bbf.putFloat(tmp.z);
+                writeMatrix3f(bbf, obj, tmp);
             }
         });
 
@@ -471,20 +462,7 @@ public class RawLayout extends BufferLayout {
             @Override
             public void write(BufferLayout serializer, ByteBuffer bbf, Matrix3f[] objs) {
                 for (Matrix3f obj : objs) {
-                    obj.getColumn(0, tmp);
-                    bbf.putFloat(tmp.x);
-                    bbf.putFloat(tmp.y);
-                    bbf.putFloat(tmp.z);
-
-                    obj.getColumn(1, tmp);
-                    bbf.putFloat(tmp.x);
-                    bbf.putFloat(tmp.y);
-                    bbf.putFloat(tmp.z);
-
-                    obj.getColumn(2, tmp);
-                    bbf.putFloat(tmp.x);
-                    bbf.putFloat(tmp.y);
-                    bbf.putFloat(tmp.z);
+                    writeMatrix3f(bbf, obj, tmp);
                 }
             }
         });
@@ -533,6 +511,23 @@ public class RawLayout extends BufferLayout {
             }
         });
 
+    }
+
+    private void writeMatrix3f(ByteBuffer bbf, Matrix3f obj, Vector3f tmp) {
+        obj.getColumn(0, tmp);
+        bbf.putFloat(tmp.x);
+        bbf.putFloat(tmp.y);
+        bbf.putFloat(tmp.z);
+
+        obj.getColumn(1, tmp);
+        bbf.putFloat(tmp.x);
+        bbf.putFloat(tmp.y);
+        bbf.putFloat(tmp.z);
+
+        obj.getColumn(2, tmp);
+        bbf.putFloat(tmp.x);
+        bbf.putFloat(tmp.y);
+        bbf.putFloat(tmp.z);
     }
 
     @Override
