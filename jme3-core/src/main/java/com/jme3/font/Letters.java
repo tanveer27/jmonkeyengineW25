@@ -88,16 +88,7 @@ class Letters {
             }
         }
 
-        LinkedList<Range> ranges = colorTags.getTags();
-        if (!ranges.isEmpty()) {
-            for (int i = 0; i < ranges.size()-1; i++) {
-                Range start = ranges.get(i);
-                Range end = ranges.get(i+1);
-                setColor(start.start, end.start, start.color);
-            }
-            Range end = ranges.getLast();
-            setColor(end.start, plainText.length(), end.color);
-        }
+        setRangeColors();
 
         invalidate();
     }
@@ -447,19 +438,23 @@ class Letters {
         // since non-color tagged text is treated differently
         // even if part of a color tagged string.
         if (baseAlpha == -1) {
-            LinkedList<Range> ranges = colorTags.getTags();
-            if (!ranges.isEmpty()) {
-                for (int i = 0; i < ranges.size()-1; i++) {
-                    Range start = ranges.get(i);
-                    Range end = ranges.get(i+1);
-                    setColor(start.start, end.start, start.color);
-                }
-                Range end = ranges.getLast();
-                setColor(end.start, plainText.length(), end.color);
-            }
+            setRangeColors();
         }
 
         invalidate();
+    }
+
+    private void setRangeColors() {
+        LinkedList<Range> ranges = colorTags.getTags();
+        if (!ranges.isEmpty()) {
+            for (int i = 0; i < ranges.size()-1; i++) {
+                Range start = ranges.get(i);
+                Range end = ranges.get(i+1);
+                setColor(start.start, end.start, start.color);
+            }
+            Range end = ranges.getLast();
+            setColor(end.start, plainText.length(), end.color);
+        }
     }
 
 }
