@@ -42,6 +42,7 @@ import com.jme3.math.Plane;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Spatial;
+import com.jme3.util.DistanceUtils;
 import com.jme3.util.TempVars;
 import java.io.IOException;
 
@@ -298,12 +299,7 @@ public class SpotLight extends Light {
     
     @Override
     protected void computeLastDistance(Spatial owner) {
-        if (owner.getWorldBound() != null) {
-            BoundingVolume bv = owner.getWorldBound();
-            lastDistance = bv.distanceSquaredTo(position);
-        } else {
-            lastDistance = owner.getWorldTranslation().distanceSquared(position);
-        }
+        lastDistance = DistanceUtils.computeLastDistance(owner, position);
     }
 
     @Override
