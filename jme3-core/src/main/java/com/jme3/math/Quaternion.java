@@ -514,7 +514,35 @@ public final class Quaternion implements Savable, Cloneable, java.io.Serializabl
         return result;
     }
 
-    /**
+   
+
+     /**
+     * Computes the scaled components used in both toTransformMatrix() and toRotationMatrix().
+     *
+     * @param norm The norm of the quaternion.
+     * @return A float array containing computed values in the order:
+     * [xx, xy, xz, xw, yy, yz, yw, zz, zw, xs, ys, zs]
+     */
+    private float[] computeMatrixComponents(float norm) {
+        float s = (norm == 1f) ? 2f : (norm > 0f) ? 2f / norm : 0;
+
+        float xs = x * s;
+        float ys = y * s;
+        float zs = z * s;
+        float xx = x * xs;
+        float xy = x * ys;
+        float xz = x * zs;
+        float xw = w * xs;
+        float yy = y * ys;
+        float yz = y * zs;
+        float yw = w * ys;
+        float zz = z * zs;
+        float zw = w * zs;
+
+        return new float[]{xx, xy, xz, xw, yy, yz, yw, zz, zw, xs, ys, zs};
+    }
+    
+     /**
      * Sets the rotation component of the specified transform matrix. The
      * current instance is unaffected.
      *
@@ -528,41 +556,21 @@ public final class Quaternion implements Savable, Cloneable, java.io.Serializabl
      * @return {@code store}, with 9 of its 16 elements modified
      */
     public Matrix4f toTransformMatrix(Matrix4f store) {
-
         float norm = norm();
-        // we explicitly test norm against one here, saving a division
-        // at the cost of a test and branch.  Is it worth it?
-        float s = (norm == 1f) ? 2f : (norm > 0f) ? 2f / norm : 0;
+        float[] components = computeMatrixComponents(norm);
 
-        // compute xs/ys/zs first to save 6 multiplications, since xs/ys/zs
-        // will be used 2-4 times each.
-        float xs = x * s;
-        float ys = y * s;
-        float zs = z * s;
-        float xx = x * xs;
-        float xy = x * ys;
-        float xz = x * zs;
-        float xw = w * xs;
-        float yy = y * ys;
-        float yz = y * zs;
-        float yw = w * ys;
-        float zz = z * zs;
-        float zw = w * zs;
-
-        // using s=2/norm (instead of 1/norm) saves 9 multiplications by 2 here
-        store.m00 = 1 - (yy + zz);
-        store.m01 = (xy - zw);
-        store.m02 = (xz + yw);
-        store.m10 = (xy + zw);
-        store.m11 = 1 - (xx + zz);
-        store.m12 = (yz - xw);
-        store.m20 = (xz - yw);
-        store.m21 = (yz + xw);
-        store.m22 = 1 - (xx + yy);
+        store.m00 = 1 - (components[4] + components[7]);
+        store.m01 = (components[1] - components[8]);
+        store.m02 = (components[2] + components[6]);
+        store.m10 = (components[1] + components[8]);
+        store.m11 = 1 - (components[0] + components[7]);
+        store.m12 = (components[5] - components[3]);
+        store.m20 = (components[2] - components[6]);
+        store.m21 = (components[5] + components[3]);
+        store.m22 = 1 - (components[0] + components[4]);
 
         return store;
     }
-
     /**
      * Sets the rotation component of the specified transform matrix. The
      * current instance is unaffected.
@@ -576,45 +584,27 @@ public final class Quaternion implements Savable, Cloneable, java.io.Serializabl
      * @param result storage for the result (not null)
      * @return {@code result}, with 9 of its 16 elements modified
      */
-    public Matrix4f toRotationMatrix(Matrix4f result) {
+   public Matrix4f toRotationMatrix(Matrix4f result) {
         TempVars tempv = TempVars.get();
         Vector3f originalScale = tempv.vect1;
 
         result.toScaleVector(originalScale);
         result.setScale(1, 1, 1);
+
         float norm = norm();
-        // we explicitly test norm against one here, saving a division
-        // at the cost of a test and branch.  Is it worth it?
-        float s = (norm == 1f) ? 2f : (norm > 0f) ? 2f / norm : 0;
+        float[] components = computeMatrixComponents(norm);
 
-        // compute xs/ys/zs first to save 6 multiplications, since xs/ys/zs
-        // will be used 2-4 times each.
-        float xs = x * s;
-        float ys = y * s;
-        float zs = z * s;
-        float xx = x * xs;
-        float xy = x * ys;
-        float xz = x * zs;
-        float xw = w * xs;
-        float yy = y * ys;
-        float yz = y * zs;
-        float yw = w * ys;
-        float zz = z * zs;
-        float zw = w * zs;
-
-        // using s=2/norm (instead of 1/norm) saves 9 multiplications by 2 here
-        result.m00 = 1 - (yy + zz);
-        result.m01 = (xy - zw);
-        result.m02 = (xz + yw);
-        result.m10 = (xy + zw);
-        result.m11 = 1 - (xx + zz);
-        result.m12 = (yz - xw);
-        result.m20 = (xz - yw);
-        result.m21 = (yz + xw);
-        result.m22 = 1 - (xx + yy);
+        result.m00 = 1 - (components[4] + components[7]);
+        result.m01 = (components[1] - components[8]);
+        result.m02 = (components[2] + components[6]);
+        result.m10 = (components[1] + components[8]);
+        result.m11 = 1 - (components[0] + components[7]);
+        result.m12 = (components[5] - components[3]);
+        result.m20 = (components[2] - components[6]);
+        result.m21 = (components[5] + components[3]);
+        result.m22 = 1 - (components[0] + components[4]);
 
         result.setScale(originalScale);
-
         tempv.release();
 
         return result;
