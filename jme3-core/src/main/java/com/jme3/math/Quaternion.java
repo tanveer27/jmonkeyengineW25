@@ -514,6 +514,29 @@ public final class Quaternion implements Savable, Cloneable, java.io.Serializabl
         return result;
     }
 
+    private float[] computeQuaternionValues(float x, float y, float z, float w) {
+        float norm = norm();
+        // We explicitly test norm against one here, saving a division at the cost of a test and branch.
+        float s = (norm == 1f) ? 2f : (norm > 0f) ? 2f / norm : 0;
+
+        // Compute xs/ys/zs first to save multiplications
+        float xs = x * s;
+        float ys = y * s;
+        float zs = z * s;
+        float xx = x * xs;
+        float xy = x * ys;
+        float xz = x * zs;
+        float xw = w * xs;
+        float yy = y * ys;
+        float yz = y * zs;
+        float yw = w * ys;
+        float zz = z * zs;
+        float zw = w * zs;
+
+        return new float[]{xx, xy, xz, xw, yy, yz, yw, zz, zw};
+    }
+
+
     /**
      * Sets the rotation component of the specified transform matrix. The
      * current instance is unaffected.
@@ -529,25 +552,17 @@ public final class Quaternion implements Savable, Cloneable, java.io.Serializabl
      */
     public Matrix4f toTransformMatrix(Matrix4f store) {
 
-        float norm = norm();
-        // we explicitly test norm against one here, saving a division
-        // at the cost of a test and branch.  Is it worth it?
-        float s = (norm == 1f) ? 2f : (norm > 0f) ? 2f / norm : 0;
+        float[] quaternionValues = computeQuaternionValues(x, y, z, w);
+        float xx = quaternionValues[0];
+        float xy = quaternionValues[1];
+        float xz = quaternionValues[2];
+        float xw = quaternionValues[3];
+        float yy = quaternionValues[4];
+        float yz = quaternionValues[5];
+        float yw = quaternionValues[6];
+        float zz = quaternionValues[7];
+        float zw = quaternionValues[8];
 
-        // compute xs/ys/zs first to save 6 multiplications, since xs/ys/zs
-        // will be used 2-4 times each.
-        float xs = x * s;
-        float ys = y * s;
-        float zs = z * s;
-        float xx = x * xs;
-        float xy = x * ys;
-        float xz = x * zs;
-        float xw = w * xs;
-        float yy = y * ys;
-        float yz = y * zs;
-        float yw = w * ys;
-        float zz = z * zs;
-        float zw = w * zs;
 
         // using s=2/norm (instead of 1/norm) saves 9 multiplications by 2 here
         store.m00 = 1 - (yy + zz);
@@ -582,25 +597,17 @@ public final class Quaternion implements Savable, Cloneable, java.io.Serializabl
 
         result.toScaleVector(originalScale);
         result.setScale(1, 1, 1);
-        float norm = norm();
-        // we explicitly test norm against one here, saving a division
-        // at the cost of a test and branch.  Is it worth it?
-        float s = (norm == 1f) ? 2f : (norm > 0f) ? 2f / norm : 0;
+        float[] quaternionValues = computeQuaternionValues(x, y, z, w);
+        float xx = quaternionValues[0];
+        float xy = quaternionValues[1];
+        float xz = quaternionValues[2];
+        float xw = quaternionValues[3];
+        float yy = quaternionValues[4];
+        float yz = quaternionValues[5];
+        float yw = quaternionValues[6];
+        float zz = quaternionValues[7];
+        float zw = quaternionValues[8];
 
-        // compute xs/ys/zs first to save 6 multiplications, since xs/ys/zs
-        // will be used 2-4 times each.
-        float xs = x * s;
-        float ys = y * s;
-        float zs = z * s;
-        float xx = x * xs;
-        float xy = x * ys;
-        float xz = x * zs;
-        float xw = w * xs;
-        float yy = y * ys;
-        float yz = y * zs;
-        float yw = w * ys;
-        float zz = z * zs;
-        float zw = w * zs;
 
         // using s=2/norm (instead of 1/norm) saves 9 multiplications by 2 here
         result.m00 = 1 - (yy + zz);
