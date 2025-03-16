@@ -1,34 +1,3 @@
-/*
- * Copyright (c) 2009-2012 jMonkeyEngine
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- * * Redistributions of source code must retain the above copyright
- *   notice, this list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright
- *   notice, this list of conditions and the following disclaimer in the
- *   documentation and/or other materials provided with the distribution.
- *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
- *   may be used to endorse or promote products derived from this software
- *   without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 package jme3test.app;
 
 import com.jme3.math.Vector3f;
@@ -42,45 +11,35 @@ public class TestTempVars {
     private static final Vector3f sumCompute = new Vector3f();
     
     public static void main(String[] args) {
-        long milliseconds, nanos;
+        long milliseconds;
         
         for (int i = 0; i < 4; i++){
             System.gc();
         }
         
-//        sumCompute.set(0, 0, 0);
-//        long nanos = System.nanoTime();
-//        for (int i = 0; i < ITERATIONS; i++) {
-//            recursiveMethod(0);
-//        }
-//        long milliseconds = (System.nanoTime() - nanos) / NANOS_TO_MS;
-//        System.out.println("100 million TempVars calls with 5 recursions: " + milliseconds + " ms");
-//        System.out.println(sumCompute);
-        
-        sumCompute.set(0, 0, 0);
-        nanos = System.nanoTime();
-        for (int i = 0; i < ITERATIONS; i++) {
-            methodThatUsesTempVars();
-        }
-        milliseconds = (System.nanoTime() - nanos) / NANOS_TO_MS;
+        milliseconds = benchmarkLoop("100 million TempVars calls", TestTempVars::methodThatUsesTempVars);
         System.out.println("100 million TempVars calls: " + milliseconds + " ms");
         System.out.println(sumCompute);
-
-        sumCompute.set(0, 0, 0);
-        nanos = System.nanoTime();
-        for (int i = 0; i < ITERATIONS; i++) {
-            methodThatUsesAllocation();
-        }
-        milliseconds = (System.nanoTime() - nanos) / NANOS_TO_MS;
+        
+        milliseconds = benchmarkLoop("100 million allocation calls", TestTempVars::methodThatUsesAllocation);
         System.out.println("100 million allocation calls: " + milliseconds + " ms");
         System.out.println(sumCompute);
         
-        nanos = System.nanoTime();
+        long nanos = System.nanoTime();
         for (int i = 0; i < 10; i++){
             System.gc();
         }
         milliseconds = (System.nanoTime() - nanos) / NANOS_TO_MS;
         System.out.println("cleanup time after allocation calls: " + milliseconds + " ms");
+    }
+
+    private static long benchmarkLoop(String label, Runnable method) {
+        sumCompute.set(0, 0, 0);
+        long nanos = System.nanoTime();
+        for (int i = 0; i < ITERATIONS; i++) {
+            method.run();
+        }
+        return (System.nanoTime() - nanos) / NANOS_TO_MS;
     }
 
     public static void methodThatUsesAllocation(){
