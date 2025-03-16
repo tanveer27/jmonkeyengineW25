@@ -110,36 +110,28 @@ public abstract class AbstractVRMouseManager implements VRMouseManager {
     }
 
     @Override
-    public void setImage(String texture) {
-        if (environment != null){
-
-            if (environment.getApplication() != null){
-                if( environment.isInVR() == false ){
-                    Texture tex = environment.getApplication().getAssetManager().loadTexture(texture);
-                    mouseImage.setTexture(environment.getApplication().getAssetManager(), (Texture2D)tex, true);
-                    ySize = tex.getImage().getHeight();
-                    mouseImage.setHeight(ySize);
-                    mouseImage.setWidth(tex.getImage().getWidth());
-                    mouseImage.getMaterial().getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-                    mouseImage.getMaterial().getAdditionalRenderState().setDepthWrite(false);
-                } else {
-                    Texture tex = environment.getApplication().getAssetManager().loadTexture(texture);
-                    mouseImage.setTexture(environment.getApplication().getAssetManager(), (Texture2D)tex, true);
-                    ySize = tex.getImage().getHeight();
-                    mouseImage.setHeight(ySize);
-                    mouseImage.setWidth(tex.getImage().getWidth());
-                    mouseImage.getMaterial().getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-                    mouseImage.getMaterial().getAdditionalRenderState().setDepthWrite(false);
-                }
-            } else {
-                throw new IllegalStateException("This VR environment is not attached to any application.");
-            }
-
-        } else {
-          throw new IllegalStateException("This VR view manager is not attached to any VR environment.");
-        }
+    
+ public void setImage(String texture) {
+    if (environment == null) {
+        throw new IllegalStateException("This VR view manager is not attached to any VR environment.");
     }
 
+    if (environment.getApplication() == null) {
+        throw new IllegalStateException("This VR environment is not attached to any application.");
+    }
+
+    applyTexture(texture);
+}
+
+private void applyTexture(String texture) {
+    Texture tex = environment.getApplication().getAssetManager().loadTexture(texture);
+    mouseImage.setTexture(environment.getApplication().getAssetManager(), (Texture2D) tex, true);
+    ySize = tex.getImage().getHeight();
+    mouseImage.setHeight(ySize);
+    mouseImage.setWidth(tex.getImage().getWidth());
+    mouseImage.getMaterial().getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+    mouseImage.getMaterial().getAdditionalRenderState().setDepthWrite(false);
+}
 
     @Override
     public Vector2f getCursorPosition() {
