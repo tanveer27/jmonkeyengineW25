@@ -523,24 +523,24 @@ public final class Quaternion implements Savable, Cloneable, java.io.Serializabl
      * @return A float array containing computed values in the order:
      * [xx, xy, xz, xw, yy, yz, yw, zz, zw, xs, ys, zs]
      */
-//    private float[] computeMatrixComponents(float norm) {
-//        float s = (norm == 1f) ? 2f : (norm > 0f) ? 2f / norm : 0;
-//
-//        float xs = x * s;
-//        float ys = y * s;
-//        float zs = z * s;
-//        float xx = x * xs;
-//        float xy = x * ys;
-//        float xz = x * zs;
-//        float xw = w * xs;
-//        float yy = y * ys;
-//        float yz = y * zs;
-//        float yw = w * ys;
-//        float zz = z * zs;
-//        float zw = w * zs;
-//
-//        return new float[]{xx, xy, xz, xw, yy, yz, yw, zz, zw, xs, ys, zs};
-//    }
+    private float[] computeMatrixComponents(float norm) {
+        float s = (norm == 1f) ? 2f : (norm > 0f) ? 2f / norm : 0;
+
+        float xs = x * s;
+        float ys = y * s;
+        float zs = z * s;
+        float xx = x * xs;
+        float xy = x * ys;
+        float xz = x * zs;
+        float xw = w * xs;
+        float yy = y * ys;
+        float yz = y * zs;
+        float yw = w * ys;
+        float zz = z * zs;
+        float zw = w * zs;
+
+        return new float[]{xx, xy, xz, xw, yy, yz, yw, zz, zw, xs, ys, zs};
+    }
     
      /**
      * Sets the rotation component of the specified transform matrix. The
@@ -1620,30 +1620,5 @@ public final class Quaternion implements Savable, Cloneable, java.io.Serializabl
                 && !Float.isInfinite(quaternion.y)
                 && !Float.isInfinite(quaternion.z)
                 && !Float.isInfinite(quaternion.w);
-    }
-    /**
-     * Computes the scaled components used in both toTransformMatrix() and toRotationMatrix().
-     *
-     * @param norm The norm of the quaternion.
-     * @return A float array containing computed values in the order:
-     * [xx, xy, xz, xw, yy, yz, yw, zz, zw, xs, ys, zs]
-     */
-    private float[] computeMatrixComponents(float norm) {
-        float s = (norm == 1f) ? 2f : (norm > 0f) ? 2f / norm : 0;
-
-        float xs = x * s;
-        float ys = y * s;
-        float zs = z * s;
-        float xx = x * xs;
-        float xy = x * ys;
-        float xz = x * zs;
-        float xw = w * xs;
-        float yy = y * ys;
-        float yz = y * zs;
-        float yw = w * ys;
-        float zz = z * zs;
-        float zw = w * zs;
-
-        return new float[]{xx, xy, xz, xw, yy, yz, yw, zz, zw, xs, ys, zs};
     }
 }
