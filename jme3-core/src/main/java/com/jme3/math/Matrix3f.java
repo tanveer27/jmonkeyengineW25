@@ -1019,6 +1019,18 @@ public final class Matrix3f implements Savable, Cloneable, java.io.Serializable 
         return invert(null);
     }
 
+   private void calculateMatrixValues(Matrix3f store, float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22) {
+    store.m00 = m11 * m22 - m12 * m21;
+    store.m01 = m02 * m21 - m01 * m22;
+    store.m02 = m01 * m12 - m02 * m11;
+    store.m10 = m12 * m20 - m10 * m22;
+    store.m11 = m00 * m22 - m02 * m20;
+    store.m12 = m02 * m10 - m00 * m12;
+    store.m20 = m10 * m21 - m11 * m20;
+    store.m21 = m01 * m20 - m00 * m21;
+    store.m22 = m00 * m11 - m01 * m10;
+}
+    
     /**
      * Returns the multiplicative inverse in the specified storage. If the
      * current instance is singular, an all-zero matrix is returned. In either
@@ -1040,15 +1052,7 @@ public final class Matrix3f implements Savable, Cloneable, java.io.Serializable 
             return store.zero();
         }
 
-        store.m00 = m11 * m22 - m12 * m21;
-        store.m01 = m02 * m21 - m01 * m22;
-        store.m02 = m01 * m12 - m02 * m11;
-        store.m10 = m12 * m20 - m10 * m22;
-        store.m11 = m00 * m22 - m02 * m20;
-        store.m12 = m02 * m10 - m00 * m12;
-        store.m20 = m10 * m21 - m11 * m20;
-        store.m21 = m01 * m20 - m00 * m21;
-        store.m22 = m00 * m11 - m01 * m10;
+        calculateMatrixValues(store, m00, m01, m02, m10, m11, m12, m20, m21, m22);
 
         store.multLocal(1f / det);
         return store;
@@ -1114,15 +1118,7 @@ public final class Matrix3f implements Savable, Cloneable, java.io.Serializable 
             store = new Matrix3f();
         }
 
-        store.m00 = m11 * m22 - m12 * m21;
-        store.m01 = m02 * m21 - m01 * m22;
-        store.m02 = m01 * m12 - m02 * m11;
-        store.m10 = m12 * m20 - m10 * m22;
-        store.m11 = m00 * m22 - m02 * m20;
-        store.m12 = m02 * m10 - m00 * m12;
-        store.m20 = m10 * m21 - m11 * m20;
-        store.m21 = m01 * m20 - m00 * m21;
-        store.m22 = m00 * m11 - m01 * m10;
+        calculateMatrixValues(store, m00, m01, m02, m10, m11, m12, m20, m21, m22);
 
         return store;
     }
