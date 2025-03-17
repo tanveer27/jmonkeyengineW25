@@ -1504,7 +1504,7 @@ public final class Matrix4f implements Savable, Cloneable, java.io.Serializable 
         store.m23 = -m20 * fA[4] + m21 * fA[2] - m23 * fA[0];
         store.m33 = +m20 * fA[3] - m21 * fA[1] + m22 * fA[0];
     }
-    
+
 
     /**
      * Generate the inverse.
