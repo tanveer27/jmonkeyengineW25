@@ -239,29 +239,25 @@ public class AndroidGestureProcessor implements
 
     @Override
     public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
-        // return true or all gestures for this event will be accumulated
-//        logger.log(Level.INFO, "onScale");
         scaleStartX = gestureDownX;
         scaleStartY = gestureDownY;
-        TouchEvent touchEvent = touchInput.getFreeTouchEvent();
-        touchEvent.set(TouchEvent.Type.SCALE_MOVE, scaleStartX, scaleStartY, 0f, 0f);
-        touchEvent.setPointerId(0);
-        touchEvent.setTime(scaleGestureDetector.getEventTime());
-        touchEvent.setScaleSpan(scaleGestureDetector.getCurrentSpan());
-        touchEvent.setDeltaScaleSpan(scaleGestureDetector.getCurrentSpan() - scaleGestureDetector.getPreviousSpan());
-        touchEvent.setScaleFactor(scaleGestureDetector.getScaleFactor());
-        touchEvent.setScaleSpanInProgress(touchInput.getScaleDetector().isInProgress());
-        touchInput.addEvent(touchEvent);
+        createScaleTouchEvent(TouchEvent.Type.SCALE_MOVE, scaleGestureDetector);
         return true;
     }
 
     @Override
     public void onScaleEnd(ScaleGestureDetector scaleGestureDetector) {
-//        logger.log(Level.INFO, "onScaleEnd");
         scaleStartX = gestureDownX;
         scaleStartY = gestureDownY;
+        createScaleTouchEvent(TouchEvent.Type.SCALE_END, scaleGestureDetector);
+    }
+
+    private void createScaleTouchEvent(TouchEvent.Type type, ScaleGestureDetector scaleGestureDetector) {
+        float jmeX = scaleStartX;
+        float jmeY = scaleStartY;
+
         TouchEvent touchEvent = touchInput.getFreeTouchEvent();
-        touchEvent.set(TouchEvent.Type.SCALE_END, scaleStartX, scaleStartY, 0f, 0f);
+        touchEvent.set(type, jmeX, jmeY, 0f, 0f);
         touchEvent.setPointerId(0);
         touchEvent.setTime(scaleGestureDetector.getEventTime());
         touchEvent.setScaleSpan(scaleGestureDetector.getCurrentSpan());
