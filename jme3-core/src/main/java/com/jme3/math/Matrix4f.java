@@ -1515,23 +1515,10 @@ public final class Matrix4f implements Savable, Cloneable, java.io.Serializable 
         if (FastMath.abs(fDet) <= 0f) {
             throw new ArithmeticException("This matrix cannot be inverted");
         }
-
-        store.m00 = +m11 * fB5 - m12 * fB4 + m13 * fB3;
-        store.m10 = -m10 * fB5 + m12 * fB2 - m13 * fB1;
-        store.m20 = +m10 * fB4 - m11 * fB2 + m13 * fB0;
-        store.m30 = -m10 * fB3 + m11 * fB1 - m12 * fB0;
-        store.m01 = -m01 * fB5 + m02 * fB4 - m03 * fB3;
-        store.m11 = +m00 * fB5 - m02 * fB2 + m03 * fB1;
-        store.m21 = -m00 * fB4 + m01 * fB2 - m03 * fB0;
-        store.m31 = +m00 * fB3 - m01 * fB1 + m02 * fB0;
-        store.m02 = +m31 * fA5 - m32 * fA4 + m33 * fA3;
-        store.m12 = -m30 * fA5 + m32 * fA2 - m33 * fA1;
-        store.m22 = +m30 * fA4 - m31 * fA2 + m33 * fA0;
-        store.m32 = -m30 * fA3 + m31 * fA1 - m32 * fA0;
-        store.m03 = -m21 * fA5 + m22 * fA4 - m23 * fA3;
-        store.m13 = +m20 * fA5 - m22 * fA2 + m23 * fA1;
-        store.m23 = -m20 * fA4 + m21 * fA2 - m23 * fA0;
-        store.m33 = +m20 * fA3 - m21 * fA1 + m22 * fA0;
+        
+        // Compute and store the cofactor matrix using precomputed values fA and fB
+        // This replaces previously duplicated code to improve maintainability
+        computeCofactorMatrix(store, new float[]{fA0, fA1, fA2, fA3, fA4, fA5},  new float[]{fB0, fB1, fB2, fB3, fB4, fB5});
 
         float fInvDet = 1.0f / fDet;
         store.multLocal(fInvDet);
@@ -1674,22 +1661,9 @@ public final class Matrix4f implements Savable, Cloneable, java.io.Serializable 
         float fB4 = m21 * m33 - m23 * m31;
         float fB5 = m22 * m33 - m23 * m32;
 
-        store.m00 = +m11 * fB5 - m12 * fB4 + m13 * fB3;
-        store.m10 = -m10 * fB5 + m12 * fB2 - m13 * fB1;
-        store.m20 = +m10 * fB4 - m11 * fB2 + m13 * fB0;
-        store.m30 = -m10 * fB3 + m11 * fB1 - m12 * fB0;
-        store.m01 = -m01 * fB5 + m02 * fB4 - m03 * fB3;
-        store.m11 = +m00 * fB5 - m02 * fB2 + m03 * fB1;
-        store.m21 = -m00 * fB4 + m01 * fB2 - m03 * fB0;
-        store.m31 = +m00 * fB3 - m01 * fB1 + m02 * fB0;
-        store.m02 = +m31 * fA5 - m32 * fA4 + m33 * fA3;
-        store.m12 = -m30 * fA5 + m32 * fA2 - m33 * fA1;
-        store.m22 = +m30 * fA4 - m31 * fA2 + m33 * fA0;
-        store.m32 = -m30 * fA3 + m31 * fA1 - m32 * fA0;
-        store.m03 = -m21 * fA5 + m22 * fA4 - m23 * fA3;
-        store.m13 = +m20 * fA5 - m22 * fA2 + m23 * fA1;
-        store.m23 = -m20 * fA4 + m21 * fA2 - m23 * fA0;
-        store.m33 = +m20 * fA3 - m21 * fA1 + m22 * fA0;
+       // Compute and store the cofactor matrix using precomputed values fA and fB
+       // This replaces previously duplicated code to improve maintainability
+       computeCofactorMatrix(store, new float[]{fA0, fA1, fA2, fA3, fA4, fA5}, new float[]{fB0, fB1, fB2, fB3, fB4, fB5});
 
         return store;
     }
@@ -2560,4 +2534,32 @@ public final class Matrix4f implements Savable, Cloneable, java.io.Serializable 
             throw new AssertionError(); // can not happen
         }
     }
+/**
+ * Computes the cofactor matrix and stores the result in the provided Matrix4f object.
+ * This method is extracted to eliminate duplicate code and improve maintainability.
+ *
+ * @param store The Matrix4f object where the computed cofactor matrix will be stored.
+ * @param fA An array of precomputed values related to matrix elements.
+ * @param fB Another array of precomputed values related to matrix elements.
+ */
+  
+private void computeCofactorMatrix(Matrix4f store, float[] fA, float[] fB) {
+    store.m00 = +m11 * fB[5] - m12 * fB[4] + m13 * fB[3];
+    store.m10 = -m10 * fB[5] + m12 * fB[2] - m13 * fB[1];
+    store.m20 = +m10 * fB[4] - m11 * fB[2] + m13 * fB[0];
+    store.m30 = -m10 * fB[3] + m11 * fB[1] - m12 * fB[0];
+    store.m01 = -m01 * fB[5] + m02 * fB[4] - m03 * fB[3];
+    store.m11 = +m00 * fB[5] - m02 * fB[2] + m03 * fB[1];
+    store.m21 = -m00 * fB[4] + m01 * fB[2] - m03 * fB[0];
+    store.m31 = +m00 * fB[3] - m01 * fB[1] + m02 * fB[0];
+    store.m02 = +m31 * fA[5] - m32 * fA[4] + m33 * fA[3];
+    store.m12 = -m30 * fA[5] + m32 * fA[2] - m33 * fA[1];
+    store.m22 = +m30 * fA[4] - m31 * fA[2] + m33 * fA[0];
+    store.m32 = -m30 * fA[3] + m31 * fA[1] - m32 * fA[0];
+    store.m03 = -m21 * fA[5] + m22 * fA[4] - m23 * fA[3];
+    store.m13 = +m20 * fA[5] - m22 * fA[2] + m23 * fA[1];
+    store.m23 = -m20 * fA[4] + m21 * fA[2] - m23 * fA[0];
+    store.m33 = +m20 * fA[3] - m21 * fA[1] + m22 * fA[0];
+}
+
 }
