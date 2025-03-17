@@ -49,6 +49,15 @@ import com.jme3.math.Vector4f;
  * @author Riccardo Balbo
  */
 public class Std140Layout extends BufferLayout {
+    private static void writeMatrix(ByteBuffer bbf, Matrix3f obj, Vector3f tmp) {
+    for (int i = 0; i < 3; i++) {
+        obj.getColumn(i, tmp);
+        bbf.putFloat(tmp.x);
+        bbf.putFloat(tmp.y);
+        bbf.putFloat(tmp.z);
+        bbf.putFloat(0);
+        }
+    }
     public Std140Layout() {
         // Init default serializers
         // 1. If the member is a scalar consuming N basic machine units, the
@@ -394,6 +403,7 @@ public class Std140Layout extends BufferLayout {
                 }
             }
         });
+        
 
         // 5. If the member is a column-major matrix with C columns and R rows,
         // the
@@ -416,23 +426,7 @@ public class Std140Layout extends BufferLayout {
 
             @Override
             public void write(BufferLayout serializer, ByteBuffer bbf, Matrix3f obj) {
-                obj.getColumn(0, tmp);
-                bbf.putFloat(tmp.x);
-                bbf.putFloat(tmp.y);
-                bbf.putFloat(tmp.z);
-                bbf.putFloat(0);
-
-                obj.getColumn(1, tmp);
-                bbf.putFloat(tmp.x);
-                bbf.putFloat(tmp.y);
-                bbf.putFloat(tmp.z);
-                bbf.putFloat(0);
-
-                obj.getColumn(2, tmp);
-                bbf.putFloat(tmp.x);
-                bbf.putFloat(tmp.y);
-                bbf.putFloat(tmp.z);
-                bbf.putFloat(0);
+                writeMatrix(bbf, obj, tmp);
             }
         });
 
@@ -500,23 +494,7 @@ public class Std140Layout extends BufferLayout {
             @Override
             public void write(BufferLayout serializer, ByteBuffer bbf, Matrix3f[] objs) {
                 for (Matrix3f obj : objs) {
-                    obj.getColumn(0, tmp);
-                    bbf.putFloat(tmp.x);
-                    bbf.putFloat(tmp.y);
-                    bbf.putFloat(tmp.z);
-                    bbf.putFloat(0);
-
-                    obj.getColumn(1, tmp);
-                    bbf.putFloat(tmp.x);
-                    bbf.putFloat(tmp.y);
-                    bbf.putFloat(tmp.z);
-                    bbf.putFloat(0);
-
-                    obj.getColumn(2, tmp);
-                    bbf.putFloat(tmp.x);
-                    bbf.putFloat(tmp.y);
-                    bbf.putFloat(tmp.z);
-                    bbf.putFloat(0);
+                    writeMatrix(bbf, obj, tmp);
                 }
             }
         });
