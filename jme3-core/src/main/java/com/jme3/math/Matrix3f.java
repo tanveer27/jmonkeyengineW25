@@ -57,6 +57,37 @@ import java.util.logging.Logger;
  */
 public final class Matrix3f implements Savable, Cloneable, java.io.Serializable {
 
+    private class MatrixComponents {
+        public float m00, m01, m02, m10, m11, m12, m20, m21, m22;
+
+        public MatrixComponents(float m00, float m01, float m02, 
+                                float m10, float m11, float m12, 
+                                float m20, float m21, float m22) {
+            this.m00 = m00;
+            this.m01 = m01;
+            this.m02 = m02;
+            this.m10 = m10;
+            this.m11 = m11;
+            this.m12 = m12;
+            this.m20 = m20;
+            this.m21 = m21;
+            this.m22 = m22;
+        }
+    }
+
+    // Refactored calculateMatrixValues method
+    private void calculateMatrixValues(Matrix3f store, MatrixComponents components) {
+        store.m00 = components.m11 * components.m22 - components.m12 * components.m21;
+        store.m01 = components.m02 * components.m21 - components.m01 * components.m22;
+        store.m02 = components.m01 * components.m12 - components.m02 * components.m11;
+        store.m10 = components.m12 * components.m20 - components.m10 * components.m22;
+        store.m11 = components.m00 * components.m22 - components.m02 * components.m20;
+        store.m12 = components.m02 * components.m10 - components.m00 * components.m12;
+        store.m20 = components.m10 * components.m21 - components.m11 * components.m20;
+        store.m21 = components.m01 * components.m20 - components.m00 * components.m21;
+        store.m22 = components.m00 * components.m11 - components.m01 * components.m10;
+    }
+    
     static final long serialVersionUID = 1;
 
     private static final Logger logger = Logger.getLogger(Matrix3f.class.getName());
@@ -1040,15 +1071,8 @@ public final class Matrix3f implements Savable, Cloneable, java.io.Serializable 
             return store.zero();
         }
 
-        store.m00 = m11 * m22 - m12 * m21;
-        store.m01 = m02 * m21 - m01 * m22;
-        store.m02 = m01 * m12 - m02 * m11;
-        store.m10 = m12 * m20 - m10 * m22;
-        store.m11 = m00 * m22 - m02 * m20;
-        store.m12 = m02 * m10 - m00 * m12;
-        store.m20 = m10 * m21 - m11 * m20;
-        store.m21 = m01 * m20 - m00 * m21;
-        store.m22 = m00 * m11 - m01 * m10;
+        MatrixComponents components = new MatrixComponents(m00, m01, m02, m10, m11, m12, m20, m21, m22);
+        calculateMatrixValues(store, components);
 
         store.multLocal(1f / det);
         return store;
@@ -1114,15 +1138,8 @@ public final class Matrix3f implements Savable, Cloneable, java.io.Serializable 
             store = new Matrix3f();
         }
 
-        store.m00 = m11 * m22 - m12 * m21;
-        store.m01 = m02 * m21 - m01 * m22;
-        store.m02 = m01 * m12 - m02 * m11;
-        store.m10 = m12 * m20 - m10 * m22;
-        store.m11 = m00 * m22 - m02 * m20;
-        store.m12 = m02 * m10 - m00 * m12;
-        store.m20 = m10 * m21 - m11 * m20;
-        store.m21 = m01 * m20 - m00 * m21;
-        store.m22 = m00 * m11 - m01 * m10;
+        MatrixComponents components = new MatrixComponents(m00, m01, m02, m10, m11, m12, m20, m21, m22);
+        calculateMatrixValues(store, components);
 
         return store;
     }
