@@ -42,7 +42,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.example.utils.MjpegUtils;  
+import com.example.utils.MjpegUtils;
+import com.example.utils.AVIIndex;
 
 
 /**
@@ -512,7 +513,7 @@ public class MjpegFileWriter {
             baos.write(intBytes(swapInt(dwSize)));
             baos.close();
 
-            return baos.toByteArray();
+           return MjpegUtils.toByteArray(baos);
         }
     }
 
