@@ -1047,6 +1047,30 @@ public class LODGeomap extends GeoMap {
     }
 
     /**
+     * Sets the coordinates for the three vertices of a Triangle based on grid positions and height values.
+     * 
+     * This method helps eliminate duplicate code when assigning vertex positions in terrain generation.
+     *
+     * @param t      The Triangle object whose vertices are being set.
+     * @param gridX  The X-coordinate of the current grid point.
+     * @param gridY  The Y-coordinate of the current grid point.
+     * @param h1     The height value at the top-left corner of the grid.
+     * @param h2     The height value at the top-right corner of the grid.
+     * @param h3     The height value at the bottom-left corner of the grid.
+     * @param h4     The height value at the bottom-right corner of the grid.
+     */
+    private void setGridPoints(Triangle t, int gridX, int gridY, float h1, float h2, float h3, float h4) {
+        // Set the first vertex at (gridX, h1, gridY) - Top-left corner
+        t.get(0).set(gridX, h1, gridY);
+        
+        // Set the second vertex at (gridX, h3, gridY + 1) - Bottom-left corner
+        t.get(1).set(gridX, h3, gridY + 1);
+        
+        // Set the third vertex at (gridX + 1, h4, gridY + 1) - Bottom-right corner
+        t.get(2).set(gridX + 1, h4, gridY + 1);
+    }
+
+    /**
      * Get the two triangles that make up the grid section at the specified point.
      *
      * For every grid space there are two triangles oriented like this:
@@ -1086,54 +1110,12 @@ public class LODGeomap extends GeoMap {
 
         if ((gridX == 0 && gridY == 0) || (gridX == width - 2 && gridY == width - 2)) {
             // top left or bottom right grid point
-            t.get(0).x = (gridX);
-            t.get(0).y = (h1);
-            t.get(0).z = (gridY);
-
-            t.get(1).x = (gridX);
-            t.get(1).y = (h3);
-            t.get(1).z = (gridY + 1);
-
-            t.get(2).x = (gridX + 1);
-            t.get(2).y = (h4);
-            t.get(2).z = (gridY + 1);
-
-            t2.get(0).x = (gridX);
-            t2.get(0).y = (h1);
-            t2.get(0).z = (gridY);
-
-            t2.get(1).x = (gridX + 1);
-            t2.get(1).y = (h4);
-            t2.get(1).z = (gridY + 1);
-
-            t2.get(2).x = (gridX + 1);
-            t2.get(2).y = (h2);
-            t2.get(2).z = (gridY);
+            setGridPoints(t, gridX, gridY, h1, h3, h4);
+            setGridPoints(t2, gridX, gridY, h1, h4, h2);
         } else {
             // all other grid points
-            t.get(0).x = (gridX);
-            t.get(0).y = (h1);
-            t.get(0).z = (gridY);
-
-            t.get(1).x = (gridX);
-            t.get(1).y = (h3);
-            t.get(1).z = (gridY + 1);
-
-            t.get(2).x = (gridX + 1);
-            t.get(2).y = (h2);
-            t.get(2).z = (gridY);
-
-            t2.get(0).x = (gridX + 1);
-            t2.get(0).y = (h2);
-            t2.get(0).z = (gridY);
-
-            t2.get(1).x = (gridX);
-            t2.get(1).y = (h3);
-            t2.get(1).z = (gridY + 1);
-
-            t2.get(2).x = (gridX + 1);
-            t2.get(2).y = (h4);
-            t2.get(2).z = (gridY + 1);
+            setGridPoints(t, gridX, gridY, h1, h3, h2);
+            setGridPoints(t2, gridX, gridY, h2, h3, h4);
         }
 
         return new Triangle[]{t, t2};
