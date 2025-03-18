@@ -396,7 +396,20 @@ public class RawLayout extends BufferLayout {
 
             @Override
             public void write(BufferLayout serializer, ByteBuffer bbf, Matrix3f obj) {
-                writeMatrix3fToBuffer(bbf, obj, tmp);
+                obj.getColumn(0, tmp);
+                bbf.putFloat(tmp.x);
+                bbf.putFloat(tmp.y);
+                bbf.putFloat(tmp.z);
+
+                obj.getColumn(1, tmp);
+                bbf.putFloat(tmp.x);
+                bbf.putFloat(tmp.y);
+                bbf.putFloat(tmp.z);
+
+                obj.getColumn(2, tmp);
+                bbf.putFloat(tmp.x);
+                bbf.putFloat(tmp.y);
+                bbf.putFloat(tmp.z);
             }
         });
 
@@ -458,7 +471,20 @@ public class RawLayout extends BufferLayout {
             @Override
             public void write(BufferLayout serializer, ByteBuffer bbf, Matrix3f[] objs) {
                 for (Matrix3f obj : objs) {
-                    writeMatrix3fToBuffer(bbf, obj, tmp);
+                    obj.getColumn(0, tmp);
+                    bbf.putFloat(tmp.x);
+                    bbf.putFloat(tmp.y);
+                    bbf.putFloat(tmp.z);
+
+                    obj.getColumn(1, tmp);
+                    bbf.putFloat(tmp.x);
+                    bbf.putFloat(tmp.y);
+                    bbf.putFloat(tmp.z);
+
+                    obj.getColumn(2, tmp);
+                    bbf.putFloat(tmp.x);
+                    bbf.putFloat(tmp.y);
+                    bbf.putFloat(tmp.z);
                 }
             }
         });
@@ -507,15 +533,6 @@ public class RawLayout extends BufferLayout {
             }
         });
 
-    }
-
-    private void writeMatrix3fToBuffer(ByteBuffer bbf, Matrix3f obj, Vector3f tmp) {
-        for (int i = 0; i < 3; i++) {
-            obj.getColumn(i, tmp);
-            bbf.putFloat(tmp.x);
-            bbf.putFloat(tmp.y);
-            bbf.putFloat(tmp.z);
-        }
     }
 
     @Override
