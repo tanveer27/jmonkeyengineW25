@@ -493,6 +493,24 @@ public class DDSLoader implements AssetLoader {
 
         return newData;
     }
+    
+    private void processMipmaps(ByteBuffer buffer, boolean flip) throws IOException {
+    int mipWidth = width;
+    int mipHeight = height;
+
+    for (int mip = 0; mip < mipMapCount; mip++) {
+        byte[] data = new byte[sizes[mip]];
+        in.readFully(data);
+        if (flip) {
+            data = flipData(data, mipWidth * bpp / 8, mipHeight);
+        }
+        buffer.put(data);
+
+        mipWidth = Math.max(mipWidth / 2, 1);
+        mipHeight = Math.max(mipHeight / 2, 1);
+    }
+}
+
 
     /**
      * Reads a grayscale image with mipmaps from the InputStream
@@ -501,32 +519,19 @@ public class DDSLoader implements AssetLoader {
      * @return A ByteBuffer containing the grayscale image data with mips.
      * @throws java.io.IOException If an error occurred while reading from InputStream
      */
-    public ByteBuffer readGrayscale2D(boolean flip, int totalSize) throws IOException {
-        ByteBuffer buffer = BufferUtils.createByteBuffer(totalSize);
+public ByteBuffer readGrayscale2D(boolean flip, int totalSize) throws IOException {
+    ByteBuffer buffer = BufferUtils.createByteBuffer(totalSize);
 
-        if (bpp == 8) {
-            logger.finest("Source image format: R8");
-        }
-
-        assert bpp == pixelFormat.getBitsPerPixel();
-
-        int mipWidth = width;
-        int mipHeight = height;
-
-        for (int mip = 0; mip < mipMapCount; mip++) {
-            byte[] data = new byte[sizes[mip]];
-            in.readFully(data);
-            if (flip) {
-                data = flipData(data, mipWidth * bpp / 8, mipHeight);
-            }
-            buffer.put(data);
-
-            mipWidth = Math.max(mipWidth / 2, 1);
-            mipHeight = Math.max(mipHeight / 2, 1);
-        }
-
-        return buffer;
+    if (bpp == 8) {
+        logger.finest("Source image format: R8");
     }
+
+    assert bpp == pixelFormat.getBitsPerPixel();
+
+    processMipmaps(buffer, flip);
+
+    return buffer;
+}
 
     /**
      * Reads an uncompressed RGB or RGBA image.
@@ -640,35 +645,23 @@ public class DDSLoader implements AssetLoader {
      * @return A ByteBuffer containing the grayscale image data with mips.
      * @throws java.io.IOException If an error occurred while reading from InputStream
      */
-    public ByteBuffer readGrayscale3D(boolean flip, int totalSize) throws IOException {
-        ByteBuffer buffer = BufferUtils.createByteBuffer(totalSize * depth);
+  public ByteBuffer readGrayscale3D(boolean flip, int totalSize) throws IOException {
+    ByteBuffer buffer = BufferUtils.createByteBuffer(totalSize * depth);
 
-        if (bpp == 8) {
-            logger.finest("Source image format: R8");
-        }
-
-        assert bpp == pixelFormat.getBitsPerPixel();
-
-
-        for (int i = 0; i < depth; i++) {
-            int mipWidth = width;
-            int mipHeight = height;
-
-            for (int mip = 0; mip < mipMapCount; mip++) {
-                byte[] data = new byte[sizes[mip]];
-                in.readFully(data);
-                if (flip) {
-                    data = flipData(data, mipWidth * bpp / 8, mipHeight);
-                }
-                buffer.put(data);
-
-                mipWidth = Math.max(mipWidth / 2, 1);
-                mipHeight = Math.max(mipHeight / 2, 1);
-            }
-        }
-        buffer.rewind();
-        return buffer;
+    if (bpp == 8) {
+        logger.finest("Source image format: R8");
     }
+
+    assert bpp == pixelFormat.getBitsPerPixel();
+
+    for (int i = 0; i < depth; i++) {
+        processMipmaps(buffer, flip);
+    }
+
+    buffer.rewind();
+    return buffer;
+}
+
 
     /**
      * Reads an uncompressed RGB or RGBA image.
