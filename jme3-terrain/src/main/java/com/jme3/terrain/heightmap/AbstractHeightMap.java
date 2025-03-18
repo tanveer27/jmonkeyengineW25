@@ -357,6 +357,16 @@ public abstract class AbstractHeightMap implements HeightMap {
         return minmax;
     }
 
+    public void applyFilterToHeightData(float[] heightData, int size, float filter) {
+    for (int i = 0; i < size; i++) {
+        float v = heightData[i];
+        for (int j = 0; j < size; j++) {
+            heightData[i + j * size] = filter * v + (1 - filter) * heightData[i + j * size];
+            v = heightData[i + j * size];
+        }
+    }
+}
+
     /**
      * <code>erodeTerrain</code> is a convenience method that applies the FIR
      * filter to a given height map. This simulates water erosion.
@@ -385,22 +395,10 @@ public abstract class AbstractHeightMap implements HeightMap {
         }
 
         //erode top to bottom
-        for (int i = 0; i < size; i++) {
-            v = heightData[i];
-            for (int j = 0; j < size; j++) {
-                heightData[i + j * size] = filter * v + (1 - filter) * heightData[i + j * size];
-                v = heightData[i + j * size];
-            }
-        }
+        applyFilterToHeightData(heightData, size, filter);
 
         //erode from bottom to top
-        for (int i = size - 1; i >= 0; i--) {
-            v = heightData[i];
-            for (int j = 0; j < size; j++) {
-                heightData[i + j * size] = filter * v + (1 - filter) * heightData[i + j * size];
-                v = heightData[i + j * size];
-            }
-        }
+        applyFilterToHeightData(heightData, size, filter);
     }
 
     /**
