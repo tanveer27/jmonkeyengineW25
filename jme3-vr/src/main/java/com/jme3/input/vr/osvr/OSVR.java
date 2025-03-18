@@ -373,12 +373,22 @@ public class OSVR implements VRAPI {
             FloatBuffer tfb = FloatBuffer.allocate(16);
             com.jme3.system.osvr.osvrdisplay.OsvrDisplayLibrary.osvrClientGetViewerEyeSurfaceProjectionMatrixf(displayConfig, 0, (byte)EYE_LEFT, 0, cam.getFrustumNear(), cam.getFrustumFar(), (short)0, tfb);
             eyeMatrix[EYE_LEFT] = new Matrix4f();
-            eyeMatrix[EYE_LEFT].set(tfb.get(0), tfb.get(4), tfb.get(8), tfb.get(12),
-                                    tfb.get(1), tfb.get(5), tfb.get(9), tfb.get(13),
-                                    tfb.get(2), tfb.get(6), tfb.get(10), tfb.get(14),
-                                    tfb.get(3), tfb.get(7), tfb.get(11), tfb.get(15));
-        }
-        return eyeMatrix[EYE_LEFT];
+           // Helper method to set matrix values
+          // This method sets the values of the provided matrix from the FloatBuffer, which contains the transformation data.
+         private void setMatrixValues(Matrix4f matrix, FloatBuffer tfb) {
+         matrix.set(tfb.get(0), tfb.get(4), tfb.get(8), tfb.get(12),
+               tfb.get(1), tfb.get(5), tfb.get(9), tfb.get(13),
+               tfb.get(2), tfb.get(6), tfb.get(10), tfb.get(14),
+               tfb.get(3), tfb.get(7), tfb.get(11), tfb.get(15));
+      }
+
+      // Set the transformation values for the left eye matrix
+      // This replaces the previous repetitive code for setting the matrix values.
+      setMatrixValues(eyeMatrix[EYE_LEFT], tfb);
+
+      // Return the updated left eye matrix
+    return eyeMatrix[EYE_LEFT];
+
     }
 
     @Override
@@ -388,13 +398,21 @@ public class OSVR implements VRAPI {
             FloatBuffer tfb = FloatBuffer.allocate(16);
             com.jme3.system.osvr.osvrdisplay.OsvrDisplayLibrary.osvrClientGetViewerEyeSurfaceProjectionMatrixf(displayConfig, 0, (byte)EYE_RIGHT, 0, cam.getFrustumNear(), cam.getFrustumFar(), (short)0, tfb);
             eyeMatrix[EYE_RIGHT] = new Matrix4f();
-            eyeMatrix[EYE_RIGHT].set(tfb.get(0), tfb.get(4), tfb.get(8), tfb.get(12),
-                                    tfb.get(1), tfb.get(5), tfb.get(9), tfb.get(13),
-                                    tfb.get(2), tfb.get(6), tfb.get(10), tfb.get(14),
-                                    tfb.get(3), tfb.get(7), tfb.get(11), tfb.get(15));
-        }
-        return eyeMatrix[EYE_RIGHT];
-    }
+            // Helper method to set matrix values
+            // This method sets the values of the provided matrix from the FloatBuffer, which contains the transformation data.
+      private void setMatrixValues(Matrix4f matrix, FloatBuffer tfb) {
+        matrix.set(tfb.get(0), tfb.get(4), tfb.get(8), tfb.get(12),
+               tfb.get(1), tfb.get(5), tfb.get(9), tfb.get(13),
+               tfb.get(2), tfb.get(6), tfb.get(10), tfb.get(14),
+               tfb.get(3), tfb.get(7), tfb.get(11), tfb.get(15));
+  }
+
+    // Set the transformation values for the left eye matrix
+    // This replaces the previous repetitive code for setting the matrix values.
+    setMatrixValues(eyeMatrix[EYE_LEFT], tfb);
+
+      // Return the updated left eye matrix
+    return eyeMatrix[EYE_LEFT];
 
     @Override
     public Vector3f getHMDVectorPoseLeftEye() {
