@@ -1054,23 +1054,24 @@ public class LODGeomap extends GeoMap {
      * @param t      The Triangle object whose vertices are being set.
      * @param gridX  The X-coordinate of the current grid point.
      * @param gridY  The Y-coordinate of the current grid point.
-     * @param h1     The height value at the top-left corner of the grid.
-     * @param h2     The height value at the top-right corner of the grid.
-     * @param h3     The height value at the bottom-left corner of the grid.
-     * @param h4     The height value at the bottom-right corner of the grid.
+     * @param heights  An array containing four height values: 
+     *                 [0] - h1 (Top-left)
+     *                 [1] - h2 (Top-right)
+     *                 [2] - h3 (Bottom-left)
+     *                 [3] - h4 (Bottom-right)
      * @param isFirstTriangle  A boolean flag: `true` for the first triangle, `false` for the second triangle.
      */
-    private void setGridPoints(Triangle t, int gridX, int gridY, float h1, float h2, float h3, float h4, boolean isFirstTriangle) {
+    private void setGridPoints(Triangle t, int gridX, int gridY, float[] heights, boolean isFirstTriangle) {
         if (isFirstTriangle) {
-            // First triangle structure
-            t.get(0).set((float) gridX, h1, (float) gridY);         // Top-left
-            t.get(1).set((float) gridX, h3, (float) (gridY + 1));   // Bottom-left
-            t.get(2).set((float) (gridX + 1), h2, (float) gridY);   // Top-right
+            // First triangle structure (top-left triangle)
+            t.get(0).set(gridX, heights[0], gridY);         // Top-left
+            t.get(1).set(gridX, heights[2], gridY + 1);     // Bottom-left
+            t.get(2).set(gridX + 1, heights[3], gridY + 1); // Bottom-right
         } else {
-            // Second triangle structure
-            t.get(0).set((float) (gridX + 1), h2, (float) gridY);   // Top-right
-            t.get(1).set((float) gridX, h3, (float) (gridY + 1));   // Bottom-left
-            t.get(2).set((float) (gridX + 1), h4, (float) (gridY + 1)); // Bottom-right
+            // Second triangle structure (bottom-right triangle)
+            t.get(0).set(gridX, heights[0], gridY);         // Top-left
+            t.get(1).set(gridX + 1, heights[3], gridY + 1); // Bottom-right
+            t.get(2).set(gridX + 1, heights[1], gridY);     // Top-right
         }
     }
     
@@ -1112,8 +1113,9 @@ public class LODGeomap extends GeoMap {
         float h4 = hdata[index + width + 1];    // bottom right
 
 
-        setGridPoints(t, gridX, gridY, h1, h2, h3, h4, true);
-        setGridPoints(t2, gridX, gridY, h1, h2, h3, h4, false);
+        // Assign triangles
+        setGridPoints(t, gridX, gridY, heights, true);
+        setGridPoints(t2, gridX, gridY, heights, false);
 
         return new Triangle[]{t, t2};
     }
