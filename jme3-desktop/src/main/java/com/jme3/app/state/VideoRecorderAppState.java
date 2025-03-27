@@ -67,7 +67,7 @@ public class VideoRecorderAppState extends AbstractAppState {
     private int framerate = 30;
     private VideoProcessor processor;
     private File file;
-    private Application app;
+    private Timer oldTimer;
     private ExecutorService executor = Executors.newCachedThreadPool(new ThreadFactory() {
 
         @Override
@@ -81,7 +81,6 @@ public class VideoRecorderAppState extends AbstractAppState {
     private int numCpus = Runtime.getRuntime().availableProcessors();
     private ViewPort lastViewPort;
     private float quality;
-    private Timer oldTimer;
 
     /**
      * Using this constructor the video files will be written sequentially to the user's home directory with
@@ -171,7 +170,6 @@ public class VideoRecorderAppState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
-        this.app = app;
         this.oldTimer = app.getTimer();
         app.setTimer(new IsoTimer(framerate));
         if (file == null) {
@@ -193,7 +191,6 @@ public class VideoRecorderAppState extends AbstractAppState {
     @Override
     public void cleanup() {
         lastViewPort.removeProcessor(processor);
-        app.setTimer(oldTimer);
         initialized = false;
         file = null;
         super.cleanup();
