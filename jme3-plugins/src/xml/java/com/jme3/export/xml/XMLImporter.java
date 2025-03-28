@@ -99,14 +99,22 @@ public class XMLImporter implements JmeImporter {
 
     public Savable load(InputStream f) throws IOException {
         try {
-            domIn = new DOMInputCapsule(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(f), this);
-            return domIn.readSavable(null, null);
-        } catch (SAXException | ParserConfigurationException e) {
-            IOException ex = new IOException();
-            ex.initCause(e);
-            throw ex;
-        }
-    }
+    // 🛡️ XXE Prevention: Disable DOCTYPE declarations and external entities
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+    dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+    dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+
+    DocumentBuilder docBuilder = dbf.newDocumentBuilder();
+    Document doc = docBuilder.parse(f);  
+
+    // Use the secure Document in DOMInputCapsule
+    domIn = new DOMInputCapsule(doc, this);
+
+} catch (ParserConfigurationException | SAXException | IOException e) {
+    throw new IllegalStateException("Error parsing XML file securely", e);
+}
+
 
     @Override
     public InputCapsule getCapsule(Savable id) {
