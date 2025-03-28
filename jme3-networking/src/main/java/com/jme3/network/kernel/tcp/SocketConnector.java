@@ -41,6 +41,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.net.ssl.*;
 
 
 /**
@@ -53,7 +54,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class SocketConnector implements Connector
 {
-    private Socket sock;
+    private SSLSocket sock;
     private InputStream in;
     private OutputStream out;
     private SocketAddress remoteAddress;
@@ -62,17 +63,26 @@ public class SocketConnector implements Connector
 
     public SocketConnector( InetAddress address, int port ) throws IOException
     {
-        this.sock = new Socket(address, port);
-        remoteAddress = sock.getRemoteSocketAddress(); // for info purposes 
+        try {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, null, null);
+            SSLSocketFactory factory = sslContext.getSocketFactory();
+            this.sock = (SSLSocket) factory.createSocket(address, port)
+            remoteAddress = sock.getRemoteSocketAddress(); // for info purposes 
         
         // Disable Nagle's buffering so data goes out when we
         // put it there.
         sock.setTcpNoDelay(true);
+        // start the handshake
+        sock.startHandshake();
         
         in = sock.getInputStream();
         out = sock.getOutputStream();
         
         connected.set(true);
+        } catch(NoSuchAlgorithmException | KeyManagementException e) {
+            throw new IOException("Failed");
+        }
     }
  
     protected void checkClosed()
@@ -146,6 +156,7 @@ public class SocketConnector implements Connector
         
         try {
             out.write(data.array(), data.position(), data.remaining());
+            out.flush();
         } catch( IOException e ) {
             throw new ConnectorException( "Error writing to connection:" + remoteAddress, e );
         }
