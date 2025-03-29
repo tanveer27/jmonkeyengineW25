@@ -276,7 +276,7 @@ public class TestObbVsBounds extends SimpleApplication {
         rootNode.attachChild(sphereGeom);
     }
 
-
+// this is a comment to trigger the changes
     @Override
     public void simpleUpdate(float tpf) {
 
