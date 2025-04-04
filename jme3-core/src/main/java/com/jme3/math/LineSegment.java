@@ -302,22 +302,8 @@ public class LineSegment implements Cloneable, Savable, java.io.Serializable {
                     {
                         s1 = -test.getExtent();
                         tempS0 = -(negativeDirectionDot * s1 + diffThisDot);
-                        if (tempS0 < -extent) {
-                            s0 = -extent;
-                            squareDistance = s0 * (s0 - (2.0f) * tempS0) + s1
-                                    * (s1 + (2.0f) * diffTestDot)
-                                    + lengthOfDiff;
-                        } else if (tempS0 <= extent) {
-                            s0 = tempS0;
-                            squareDistance = -s0 * s0 + s1
-                                    * (s1 + (2.0f) * diffTestDot)
-                                    + lengthOfDiff;
-                        } else {
-                            s0 = extent;
-                            squareDistance = s0 * (s0 - (2.0f) * tempS0) + s1
-                                    * (s1 + (2.0f) * diffTestDot)
-                                    + lengthOfDiff;
-                        }
+                        squareDistance = computeSquareDistance(tempS0, s1, extent, diffTestDot, lengthOfDiff);
+
                     }
                 } else {
                     if (s1 >= -extentDeterminant1) {
@@ -345,7 +331,8 @@ public class LineSegment implements Cloneable, Savable, java.io.Serializable {
                         {
                             s1 = test.getExtent();
                             tempS0 = -(negativeDirectionDot * s1 + diffThisDot);
-                            squareDistance = calculateCornerSquareDistance(s0, s1, tempS0, 0, extent, test.getExtent(), diffThisDot, diffTestDot, lengthOfDiff, negativeDirectionDot);
+
+                            squareDistance = computeSquareDistance(tempS0, s1, extent, diffTestDot, lengthOfDiff);
                         }
                     } else // region 8 (corner)
                     {
@@ -380,69 +367,15 @@ public class LineSegment implements Cloneable, Savable, java.io.Serializable {
                     {
                         s1 = test.getExtent();
                         tempS0 = -(negativeDirectionDot * s1 + diffThisDot);
-                        if (tempS0 > extent) {
-                            s0 = extent;
-                            squareDistance = s0 * (s0 - (2.0f) * tempS0) + s1
-                                    * (s1 + (2.0f) * diffTestDot)
-                                    + lengthOfDiff;
-                        } else if (tempS0 >= -extent) {
-                            s0 = tempS0;
-                            squareDistance = -s0 * s0 + s1
-                                    * (s1 + (2.0f) * diffTestDot)
-                                    + lengthOfDiff;
-                        } else {
-                            s0 = -extent;
-                            tempS1 = -(negativeDirectionDot * s0 + diffTestDot);
-                            if (tempS1 < -test.getExtent()) {
-                                s1 = -test.getExtent();
-                                squareDistance = s1 * (s1 - (2.0f) * tempS1)
-                                        + s0 * (s0 + (2.0f) * diffThisDot)
-                                        + lengthOfDiff;
-                            } else if (tempS1 <= test.getExtent()) {
-                                s1 = tempS1;
-                                squareDistance = -s1 * s1 + s0
-                                        * (s0 + (2.0f) * diffThisDot)
-                                        + lengthOfDiff;
-                            } else {
-                                s1 = test.getExtent();
-                                squareDistance = s1 * (s1 - (2.0f) * tempS1)
-                                        + s0 * (s0 + (2.0f) * diffThisDot)
-                                        + lengthOfDiff;
-                            }
-                        }
+                        squareDistance = computeSquareDistance(tempS0, s1, extent, diffTestDot, lengthOfDiff);
+
                     }
                 } else // region 6 (corner)
                 {
                     s1 = -test.getExtent();
                     tempS0 = -(negativeDirectionDot * s1 + diffThisDot);
-                    if (tempS0 > extent) {
-                        s0 = extent;
-                        squareDistance = s0 * (s0 - (2.0f) * tempS0) + s1
-                                * (s1 + (2.0f) * diffTestDot) + lengthOfDiff;
-                    } else if (tempS0 >= -extent) {
-                        s0 = tempS0;
-                        squareDistance = -s0 * s0 + s1
-                                * (s1 + (2.0f) * diffTestDot) + lengthOfDiff;
-                    } else {
-                        s0 = -extent;
-                        tempS1 = -(negativeDirectionDot * s0 + diffTestDot);
-                        if (tempS1 < -test.getExtent()) {
-                            s1 = -test.getExtent();
-                            squareDistance = s1 * (s1 - (2.0f) * tempS1) + s0
-                                    * (s0 + (2.0f) * diffThisDot)
-                                    + lengthOfDiff;
-                        } else if (tempS1 <= test.getExtent()) {
-                            s1 = tempS1;
-                            squareDistance = -s1 * s1 + s0
-                                    * (s0 + (2.0f) * diffThisDot)
-                                    + lengthOfDiff;
-                        } else {
-                            s1 = test.getExtent();
-                            squareDistance = s1 * (s1 - (2.0f) * tempS1) + s0
-                                    * (s0 + (2.0f) * diffThisDot)
-                                    + lengthOfDiff;
-                        }
-                    }
+                    squareDistance = computeSquareDistance(tempS0, s1, extent, diffTestDot, lengthOfDiff);
+
                 }
             }
         } else {
@@ -736,7 +669,7 @@ public class LineSegment implements Cloneable, Savable, java.io.Serializable {
     }
 
     /**
-    /**
+     /**
      * <p>Evaluates whether a given point is contained within the axis aligned bounding box
      * that contains this LineSegment.</p><p>This function is float error aware.</p>
      *
@@ -769,4 +702,28 @@ public class LineSegment implements Cloneable, Savable, java.io.Serializable {
 
         return true;
     }
+    private float computeSquareDistance(float tempS0, float s1, float extent, float diffTestDot, float lengthOfDiff) {
+        float s0;
+        float squareDistance;
+
+        if (tempS0 < -extent) {
+            s0 = -extent;
+            squareDistance = s0 * (s0 - (2.0f) * tempS0) + s1
+                    * (s1 + (2.0f) * diffTestDot)
+                    + lengthOfDiff;
+        } else if (tempS0 <= extent) {
+            s0 = tempS0;
+            squareDistance = -s0 * s0 + s1
+                    * (s1 + (2.0f) * diffTestDot)
+                    + lengthOfDiff;
+        } else {
+            s0 = extent;
+            squareDistance = s0 * (s0 - (2.0f) * tempS0) + s1
+                    * (s1 + (2.0f) * diffTestDot)
+                    + lengthOfDiff;
+        }
+
+        return squareDistance;
+    }
+
 }
