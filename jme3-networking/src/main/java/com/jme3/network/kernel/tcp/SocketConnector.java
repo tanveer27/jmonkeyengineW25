@@ -67,7 +67,7 @@ public class SocketConnector implements Connector
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, null, null);
             SSLSocketFactory factory = sslContext.getSocketFactory();
-            this.sock = (SSLSocket) factory.createSocket(address, port)
+            this.sock = (SSLSocket) factory.createSocket(address, port);
             remoteAddress = sock.getRemoteSocketAddress(); // for info purposes 
         
         // Disable Nagle's buffering so data goes out when we
