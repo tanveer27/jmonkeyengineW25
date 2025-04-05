@@ -42,7 +42,8 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.net.ssl.*;
-
+import java.security.NoSuchAlgorithmException;
+import javax.net.ssl.KeyManagementException;
 
 /**
  *  A straight forward socket-based connector implementation that
