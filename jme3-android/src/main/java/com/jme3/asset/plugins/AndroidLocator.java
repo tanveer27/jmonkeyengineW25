@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 public class AndroidLocator implements AssetLocator {
 
     private static final Logger logger = Logger.getLogger(AndroidLocator.class.getName());
-    private static final String TAG = "Failed to open asset ";
 
     private String rootPath = "";
 
@@ -114,13 +113,13 @@ public class AndroidLocator implements AssetLocator {
                     try {
                         return androidResources.getAssets().open(assetPath);
                     } catch (IOException ex) {
-                        throw new AssetLoadException(TAG + assetPath, ex);
+                        throw new AssetLoadException("Failed to open asset " + assetPath, ex);
                     }
                 } else {
                     try {
                         return androidResources.openRawResource(resourceId);
                     } catch (Resources.NotFoundException ex) {
-                        throw new AssetLoadException(TAG + assetPath, ex);
+                        throw new AssetLoadException("Failed to open asset " + assetPath, ex);
                     }
                 }
             }
@@ -132,13 +131,13 @@ public class AndroidLocator implements AssetLocator {
                 try {
                     return androidResources.getAssets().openFd(assetPath);
                 } catch (IOException ex) {
-                    throw new AssetLoadException(TAG + assetPath, ex);
+                    throw new AssetLoadException("Failed to open asset " + assetPath, ex);
                 }
             } else {
                 try {
                     return androidResources.openRawResourceFd(resourceId);
                 } catch (Resources.NotFoundException ex) {
-                    throw new AssetLoadException(TAG + assetPath, ex);
+                    throw new AssetLoadException("Failed to open asset " + assetPath, ex);
                 }
             }
         }
