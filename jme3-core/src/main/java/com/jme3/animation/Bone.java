@@ -303,8 +303,10 @@ public final class Bone implements Savable, JmeCloneable {
      */
     @Deprecated
     public Vector3f getWorldBindInversePosition() {
-        return modelBindInversePos;
+        return modelBindInversePos.clone();  // Return a clone (defensive copy) of the Vector3f
     }
+    
+
 
     /**
      * Returns the inverse Bind position of this bone expressed in model space.
