@@ -71,8 +71,11 @@ public class AnimClip implements JmeCloneable, Savable {
      * @param tracks the tracks to use (alias created)
      */
     public void setTracks(AnimTrack[] tracks) {
-        this.tracks = tracks;
-        for (AnimTrack track : tracks) {
+        this.tracks = new AnimTrack[tracks.length];  // Create a copy of the array
+        System.arraycopy(tracks, 0, this.tracks, 0, tracks.length);  // Copy elements
+
+        // Now, make sure to clone each AnimTrack to ensure a deep copy
+        for (AnimTrack track : this.tracks) {
             if (track.getLength() > length) {
                 length = track.getLength();
             }
@@ -103,7 +106,7 @@ public class AnimClip implements JmeCloneable, Savable {
      * @return the pre-existing array
      */
     public AnimTrack[] getTracks() {
-        return tracks;
+        return tracks.clone();  // Return a copy of the array
     }
 
     /**
@@ -160,7 +163,6 @@ public class AnimClip implements JmeCloneable, Savable {
         OutputCapsule oc = ex.getCapsule(this);
         oc.write(name, "name", null);
         oc.write(tracks, "tracks", null);
-
     }
 
     /**
@@ -186,5 +188,4 @@ public class AnimClip implements JmeCloneable, Savable {
             }
         }
     }
-
 }
