@@ -122,6 +122,7 @@ public class XMLImporter implements JmeImporter {
 }
 
 
+
     @Override
     public InputCapsule getCapsule(Savable id) {
         return domIn;
