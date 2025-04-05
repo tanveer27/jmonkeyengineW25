@@ -114,7 +114,7 @@ public class XMLImporter implements JmeImporter {
 } catch (ParserConfigurationException | SAXException | IOException e) {
     throw new IllegalStateException("Error parsing XML file securely", e);
 }
-
+    }
 
     @Override
     public InputCapsule getCapsule(Savable id) {
