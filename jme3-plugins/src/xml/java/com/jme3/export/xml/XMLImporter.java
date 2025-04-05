@@ -101,24 +101,26 @@ public class XMLImporter implements JmeImporter {
         }
     }
 
-    public Savable load(InputStream f) throws IOException {
-        try {
-    // 🛡️ XXE Prevention: Disable DOCTYPE declarations and external entities
-    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-    dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-    dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
-    dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+   public Savable load(InputStream f) throws IOException {
+    try {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
 
-    DocumentBuilder docBuilder = dbf.newDocumentBuilder();
-    Document doc = docBuilder.parse(f);  
+        DocumentBuilder docBuilder = dbf.newDocumentBuilder();
+        Document doc = docBuilder.parse(f);  
 
-    // Use the secure Document in DOMInputCapsule
-    domIn = new DOMInputCapsule(doc, this);
+        domIn = new DOMInputCapsule(doc, this);
 
-} catch (ParserConfigurationException | SAXException | IOException e) {
-    throw new IllegalStateException("Error parsing XML file securely", e);
-}
+        // ✅ Return the actual Savable object parsed from XML
+        return domIn.readSavable(null, null);
+
+    } catch (ParserConfigurationException | SAXException | IOException e) {
+        throw new IllegalStateException("Error parsing XML file securely", e);
     }
+}
+
 
     @Override
     public InputCapsule getCapsule(Savable id) {
