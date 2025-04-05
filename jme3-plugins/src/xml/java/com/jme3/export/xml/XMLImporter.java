@@ -44,6 +44,10 @@ import java.io.InputStream;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+
 
 /**
  * Part of the jME XML IO system as introduced in the Google Code jmexml project.
@@ -97,16 +101,27 @@ public class XMLImporter implements JmeImporter {
         }
     }
 
-    public Savable load(InputStream f) throws IOException {
-        try {
-            domIn = new DOMInputCapsule(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(f), this);
-            return domIn.readSavable(null, null);
-        } catch (SAXException | ParserConfigurationException e) {
-            IOException ex = new IOException();
-            ex.initCause(e);
-            throw ex;
-        }
+   public Savable load(InputStream f) throws IOException {
+    try {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+
+        DocumentBuilder docBuilder = dbf.newDocumentBuilder();
+        Document doc = docBuilder.parse(f);  
+
+        domIn = new DOMInputCapsule(doc, this);
+
+        // ✅ Return the actual Savable object parsed from XML
+        return domIn.readSavable(null, null);
+
+    } catch (ParserConfigurationException | SAXException | IOException e) {
+        throw new IllegalStateException("Error parsing XML file securely", e);
     }
+}
+
+
 
     @Override
     public InputCapsule getCapsule(Savable id) {

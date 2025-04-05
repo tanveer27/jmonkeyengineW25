@@ -48,8 +48,8 @@ import javax.swing.JTextArea;
  * @author kwando
  */
 public class AWTErrorDialog extends JDialog {
-    public static String DEFAULT_TITLE = "Error in application";
-    public static int PADDING = 8;
+    public static final String DEFAULT_TITLE = "Error in application";
+    public static final int PADDING = 8;
     
     /**
      * Create a new Dialog with a title and a message.
