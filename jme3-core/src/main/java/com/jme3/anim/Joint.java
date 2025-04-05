@@ -389,7 +389,7 @@ public class Joint implements Savable, JmeCloneable, HasLocalTransform {
      * @return the pre-existing instance
      */
     public Transform getInitialTransform() {
-        return initialTransform;
+        return initialTransform.clone();
     }
 
     /**
