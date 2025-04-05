@@ -42,8 +42,7 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.net.ssl.*;
-import java.security.NoSuchAlgorithmException;
-import javax.net.ssl.KeyManagementException;
+import java.security.GeneralSecurityException;
 
 /**
  *  A straight forward socket-based connector implementation that
@@ -81,8 +80,8 @@ public class SocketConnector implements Connector
         out = sock.getOutputStream();
         
         connected.set(true);
-        } catch(NoSuchAlgorithmException | KeyManagementException e) {
-            throw new IOException("Failed");
+        } catch (GeneralSecurityException e) {
+            throw new IOException("Failed", e);
         }
     }
  
