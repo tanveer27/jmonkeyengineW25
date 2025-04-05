@@ -31,9 +31,14 @@
  */
 package com.jme3.math;
 
-import com.jme3.export.*;
-import com.jme3.util.TempVars;
 import java.io.IOException;
+
+import com.jme3.export.InputCapsule;
+import com.jme3.export.JmeExporter;
+import com.jme3.export.JmeImporter;
+import com.jme3.export.OutputCapsule;
+import com.jme3.export.Savable;
+import com.jme3.util.TempVars;
 
 /**
  * <p>LineSegment represents a segment in the space. This is a portion of a Line
@@ -143,6 +148,60 @@ public class LineSegment implements Cloneable, Savable, java.io.Serializable {
      */
     public float distance(Ray r) {
         return FastMath.sqrt(distanceSquared(r));
+    }
+
+    /**
+     * Helper method to calculate the squared distance for corner regions.
+     *
+     * @param s0 the parameter for this segment
+     * @param s1 the parameter for the test segment
+     * @param tempS0 temporary value for s0
+     * @param tempS1 temporary value for s1
+     * @param extent the extent of this segment
+     * @param testExtent the extent of the test segment
+     * @param diffThisDot dot product of the difference vector and this
+     * segment's direction
+     * @param diffTestDot dot product of the difference vector and the test
+     * segment's direction
+     * @param lengthOfDiff squared length of the difference vector
+     * @param negativeDirectionDot dot product of the negative direction
+     * @return the squared distance
+     */
+    private float calculateCornerSquareDistance(float s0, float s1, float tempS0, float tempS1, float extent, float testExtent, float diffThisDot, float diffTestDot, float lengthOfDiff, float negativeDirectionDot) {
+        float squareDistance;
+
+        if (tempS0 < -extent) {
+            s0 = -extent;
+            squareDistance = s0 * (s0 - (2.0f) * tempS0)
+                    + s1 * (s1 + (2.0f) * diffTestDot)
+                    + lengthOfDiff;
+        } else if (tempS0 <= extent) {
+            s0 = tempS0;
+            squareDistance = -s0 * s0 + s1
+                    * (s1 + (2.0f) * diffTestDot)
+                    + lengthOfDiff;
+        } else {
+            s0 = extent;
+            tempS1 = -(negativeDirectionDot * s0 + diffTestDot); // Initialize tempS1 here
+            if (tempS1 < -testExtent) {
+                s1 = -testExtent;
+                squareDistance = s1 * (s1 - (2.0f) * tempS1)
+                        + s0 * (s0 + (2.0f) * diffThisDot)
+                        + lengthOfDiff;
+            } else if (tempS1 <= testExtent) {
+                s1 = tempS1;
+                squareDistance = -s1 * s1 + s0
+                        * (s0 + (2.0f) * diffThisDot)
+                        + lengthOfDiff;
+            } else {
+                s1 = testExtent;
+                squareDistance = s1 * (s1 - (2.0f) * tempS1)
+                        + s0 * (s0 + (2.0f) * diffThisDot)
+                        + lengthOfDiff;
+            }
+        }
+
+        return squareDistance;
     }
 
     /**
@@ -272,43 +331,14 @@ public class LineSegment implements Cloneable, Savable, java.io.Serializable {
                         {
                             s1 = test.getExtent();
                             tempS0 = -(negativeDirectionDot * s1 + diffThisDot);
-                            squareDistance = computeSquareDistance(tempS0, s1, extent, diffTestDot, lengthOfDiff);
 
+                            squareDistance = computeSquareDistance(tempS0, s1, extent, diffTestDot, lengthOfDiff);
                         }
                     } else // region 8 (corner)
                     {
                         s1 = -test.getExtent();
                         tempS0 = -(negativeDirectionDot * s1 + diffThisDot);
-                        if (tempS0 < -extent) {
-                            s0 = -extent;
-                            squareDistance = s0 * (s0 - (2.0f) * tempS0) + s1
-                                    * (s1 + (2.0f) * diffTestDot)
-                                    + lengthOfDiff;
-                        } else if (tempS0 <= extent) {
-                            s0 = tempS0;
-                            squareDistance = -s0 * s0 + s1
-                                    * (s1 + (2.0f) * diffTestDot)
-                                    + lengthOfDiff;
-                        } else {
-                            s0 = extent;
-                            tempS1 = -(negativeDirectionDot * s0 + diffTestDot);
-                            if (tempS1 > test.getExtent()) {
-                                s1 = test.getExtent();
-                                squareDistance = s1 * (s1 - (2.0f) * tempS1)
-                                        + s0 * (s0 + (2.0f) * diffThisDot)
-                                        + lengthOfDiff;
-                            } else if (tempS1 >= -test.getExtent()) {
-                                s1 = tempS1;
-                                squareDistance = -s1 * s1 + s0
-                                        * (s0 + (2.0f) * diffThisDot)
-                                        + lengthOfDiff;
-                            } else {
-                                s1 = -test.getExtent();
-                                squareDistance = s1 * (s1 - (2.0f) * tempS1)
-                                        + s0 * (s0 + (2.0f) * diffThisDot)
-                                        + lengthOfDiff;
-                            }
-                        }
+                        squareDistance = calculateCornerSquareDistance(s0, s1, tempS0, 0, extent, test.getExtent(), diffThisDot, diffTestDot, lengthOfDiff, negativeDirectionDot);
                     }
                 }
             } else {
