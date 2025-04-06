@@ -39,7 +39,7 @@ public class TestIDList {
 
     static class StateCol {
 
-        final private static Random rand = new Random();
+        final private static SecureRandom rand = new SecureRandom();
 
         final private Map<Integer, Object> objs = new HashMap<>();
 
