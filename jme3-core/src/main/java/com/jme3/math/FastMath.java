@@ -31,6 +31,7 @@
  */
 package com.jme3.math;
 
+import java.security.SecureRandom;
 import java.util.Random;
 
 /**
@@ -94,7 +95,7 @@ final public class FastMath {
     /**
      * A precreated random object for random numbers.
      */
-    public static final Random rand = new Random(System.currentTimeMillis());
+    public static final SecureRandom rand = new SecureRandom(System.currentTimeMillis());
 
     /**
      * Returns true if the number is a power of 2 (2,4,8,16...)
