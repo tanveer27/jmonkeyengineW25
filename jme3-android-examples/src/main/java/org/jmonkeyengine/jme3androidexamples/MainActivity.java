@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 //TODO:  Create onscreen virtual keypad for triggering normal mapped keys used by test apps or modify test apps for touch with onscreen keypad
 
@@ -159,12 +161,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 //            	classNames.add(className);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "An I/O error occurred", e);
         } finally {
             try {
                 dex.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING, "Failed to close dex", e);
             }
         }
 
