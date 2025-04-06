@@ -159,12 +159,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 //            	classNames.add(className);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "An I/O error occurred", e);
         } finally {
             try {
                 dex.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING, "Failed to close dex", e);
             }
         }
 
