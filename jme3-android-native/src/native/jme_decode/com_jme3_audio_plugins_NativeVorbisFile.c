@@ -200,7 +200,7 @@ JNIEXPORT void JNICALL Java_com_jme3_audio_plugins_NativeVorbisFile_init
         free(wrapper);
     
         char err[512];
-        sprintf(err, "init failed: %d", result);
+        snprintf(err, sizeof(err), "init failed: %d", result);
         throwIOException(env, err);
         
         return;
@@ -246,7 +246,7 @@ JNIEXPORT void JNICALL Java_com_jme3_audio_plugins_NativeVorbisFile_seekTime
     if (result != 0)
     {
         char err[512];
-        sprintf(err, "ov_time_seek failed: %d", result);
+        snprintf(err, sizeof(err), "ov_time_seek failed: %d", result);
         throwIOException(env, err);
     }
 }
@@ -273,7 +273,7 @@ JNIEXPORT jint JNICALL Java_com_jme3_audio_plugins_NativeVorbisFile_readIntoArra
     else if (result < 0)
     {
         char err[512];
-        sprintf(err, "ov_read failed: %ld", result);
+        snprintf(err, sizeof(err), "ov_read failed: %ld", result);
         throwIOException(env, err);
         return 0;
     }
@@ -317,7 +317,7 @@ JNIEXPORT void JNICALL Java_com_jme3_audio_plugins_NativeVorbisFile_readIntoBuff
         
         if (result == 0)
         {
-            sprintf(err, "premature EOF. expected %lld bytes, got %d.", 
+            snprintf(err, sizeof(err), "premature EOF. expected %lld bytes, got %d.",
                     byteBufferCap, offset);
             
             throwIOException(env, err);
@@ -325,7 +325,7 @@ JNIEXPORT void JNICALL Java_com_jme3_audio_plugins_NativeVorbisFile_readIntoBuff
         }
         else if (result < 0)
         {
-            sprintf(err, "ov_read failed: %ld", result);
+            snprintf(err, sizeof(err), "ov_read failed: %ld", result);
             throwIOException(env, err);
             return;
         }
