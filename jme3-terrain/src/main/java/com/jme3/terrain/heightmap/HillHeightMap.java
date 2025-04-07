@@ -31,6 +31,7 @@
  */
 package com.jme3.terrain.heightmap;
 
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -108,7 +109,7 @@ public class HillHeightMap extends AbstractHeightMap {
      */
     public HillHeightMap(int size, int iterations, float minRadius,
             float maxRadius) throws Exception {
-        this(size, iterations, minRadius, maxRadius, new Random().nextLong());
+        this(size, iterations, minRadius, maxRadius, new SecureRandom().nextLong());
     }
 
     /**
