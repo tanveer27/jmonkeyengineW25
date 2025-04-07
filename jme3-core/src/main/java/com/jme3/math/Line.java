@@ -36,6 +36,7 @@ import com.jme3.util.BufferUtils;
 import com.jme3.util.TempVars;
 import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.security.SecureRandom;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -50,6 +51,8 @@ public class Line implements Savable, Cloneable, java.io.Serializable {
 
     private Vector3f origin;
     private Vector3f direction;
+
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     /**
      * Constructor instantiates a new <code>Line</code> object. The origin and
@@ -222,7 +225,7 @@ public class Line implements Savable, Cloneable, java.io.Serializable {
         if (result == null) {
             result = new Vector3f();
         }
-        float rand = ThreadLocalRandom.current().nextFloat();
+        float rand = RANDOM.nextFloat();
 
         result.x = (origin.x * (1 - rand)) + (direction.x * rand);
         result.y = (origin.y * (1 - rand)) + (direction.y * rand);
