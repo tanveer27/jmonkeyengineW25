@@ -37,7 +37,6 @@ import com.jme3.util.TempVars;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.security.SecureRandom;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * <code>Line</code> defines a line. Where a line is defined as infinite along
