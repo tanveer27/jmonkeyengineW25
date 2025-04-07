@@ -158,7 +158,6 @@ public class ParticleDepositionHeightMap extends AbstractHeightMap {
         //create peaks.
         for (int i = 0; i < jumps; i++) {
 
-
             //pick a random point.
             x = (int) (Math.rint(Math.random() * (size - 1)));
             y = (int) (Math.rint(Math.random() * (size - 1)));
