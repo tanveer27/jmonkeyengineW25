@@ -31,6 +31,7 @@
  */
 package com.jme3.terrain.heightmap;
 
+import java.security.SecureRandom;
 import java.util.logging.Logger;
 
 /**
@@ -133,6 +134,7 @@ public class ParticleDepositionHeightMap extends AbstractHeightMap {
         int m;
         float calderaStartPoint;
         float cutoff;
+        SecureRandom SECURE_RANDOM = new SecureRandom();
         int dx[] = {0, 1, 0, size - 1, 1, 1, size - 1, size - 1};
         int dy[] = {1, 0, size - 1, 0, size - 1, 1, size - 1, 1};
         float[][] tempBuffer = new float[size][size];
@@ -156,7 +158,6 @@ public class ParticleDepositionHeightMap extends AbstractHeightMap {
         //create peaks.
         for (int i = 0; i < jumps; i++) {
 
-
             //pick a random point.
             x = (int) (Math.rint(Math.random() * (size - 1)));
             y = (int) (Math.rint(Math.random() * (size - 1)));
@@ -167,10 +168,8 @@ public class ParticleDepositionHeightMap extends AbstractHeightMap {
             calderaY = y;
 
 
-            int numberParticles =
-                    (int) (Math.rint(
-                    (Math.random() * (maxParticles - minParticles))
-                    + minParticles));
+            int numberParticles = SECURE_RANDOM.nextInt((maxParticles - minParticles) + 1) + minParticles;
+
             //drop particles.
             for (int j = 0; j < numberParticles; j++) {
                 //check to see if we should agitate the drop point.
